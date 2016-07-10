@@ -1,0 +1,40 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely need to edit after that.
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'jekyll serve'. If you change this file, please restart the server process.
+
+# Site settings
+title: raspi.farm
+email:
+description:
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "http://raspi.farm" # the base hostname & protocol for your site
+header-img: "assets/images/raspi3.jpg"
+background-color: "#6aae5f"
+
+collections:
+  howtos:
+    output: true
+    permalink: /howtos/:path/
+  tags:
+    setup:
+      color: "#eee"
+    machinelearning:
+      color: "#77a"
+# Build settings
+markdown: kramdown
+
+sass:
+  # loading path from site root
+  # default to _sass
+  sass_dir: bower_components/bootstrap-sass/assets/stylesheets
+
+  # style : nested (default), compact, compressed, expanded
+  #         :nested, :compact, :compressed, :expanded also works
+  # see http://sass-lang.com/documentation/file.SASS_REFERENCE.html#output_style
+  # on a typical twitter bootstrap stats are :
+  # nested 138,7kB, compact 129,1kB, expanded 135,9 kB, compressed 122,4 kB
+  style: compressed
+

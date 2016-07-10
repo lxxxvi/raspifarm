@@ -1,0 +1,10 @@
+<h3>{% icon fa-graduation-cap %} All Howtos</h3>
+
+<ul class="list-group">
+  {% for howto in site.howtos | sort: "title" %}
+    <a href="{{ howto.url }}" class="list-group-item">
+      <h4>{{ howto.title }}</h4>
+      <p class="list-group-item-text">{{ howto.description }}</p>
+    </a>
+  {% endfor %}
+</ul>

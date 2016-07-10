@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.cpu::before {
+  content: 'CPU ';
+}
+
+.memory::before {
+  content: 'Memory ';
+}
+
+.cpu .used_percent::after, .memory .used_percent::after {
+  content: '%';
+}
+
+.memory .used_kb::after {
+  content: 'KB used';
+}
+
+.memory .total_kb::after {
+  content: 'KB total';
+}

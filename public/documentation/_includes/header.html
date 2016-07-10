@@ -1,0 +1,37 @@
+<header class="intro-header" style="background-color:
+{% if page.background-color %}
+  {{ page.background-color }}
+{% elsif layout.background-color %}
+  {{ layout.background-color }}
+{% else %}
+  {{ site.background-color }}
+{% endif %};">
+<!--
+style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  {% if page.sub-title %}
+                    <h2>{{ page.sub-title }}</h2>
+                  {% elsif layout.sub-title %}
+                    <h2>{{ layout.sub-title }}</h2>
+                  {% else %}
+                  {% endif %}
+                    <hr class="small">
+                    {% if page.icon %}
+                      <i aria-hidden="true" class="fa {{ page.icon }} fa-5x"></i>
+                    {% endif %}
+                    <h1>
+                      {% if page.title %}
+                        {{ page.title }}
+                      {% else %}
+                        {{ site.title }}
+                      {% endif %}
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

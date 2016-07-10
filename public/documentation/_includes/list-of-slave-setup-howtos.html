@@ -1,0 +1,14 @@
+<h3>{% icon fa-graduation-cap %} Slave Setup Howtos</h3>
+
+{% assign orderedHowtos = site.howtos | sort: "order"  %}
+
+<ul class="list-group">
+  {% for howto in orderedHowtos %}
+    {% if howto.tags contains "setup" and howto.tags contains "slave" %}
+      <a href="{{ howto.url }}" class="list-group-item">
+        <h4>{{ howto.title }}</h4>
+        <p class="list-group-item-text">{{ howto.description }}</p>
+      </a>
+    {% endif %}
+  {% endfor %}
+</ul>

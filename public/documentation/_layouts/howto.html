@@ -1,0 +1,31 @@
+---
+layout: default
+sub-title: How to...
+background-color: "#CE972E"
+---
+
+<div class="container">
+  <div class="row tags">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      {% if page.tags %}
+      Tags 
+          {% for tag in page.tags %}
+            <span class="label label-success">{{tag}}</span>
+          {% endfor %}
+      {% endif %}      
+    </div>
+  </div>
+  <div class="row difficulty">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      {% if page.difficulty %}
+          Difficulty <span class="label label-default">{{page.difficulty}}</span>
+      {% endif %}      
+    </div>
+  </div>
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+			{{ content }}
+		</div>
+	</div>
+</div>
+

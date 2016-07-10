@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8" />
+    <title>Raspifarm Dog</title>
+    <link rel="stylesheet" href="stylesheet" type="text/css"></link
+  </head>
+  <body>
+
+    <div id="192-168-17-15" class="nodes">
+      <h2>Workload 192.168.17.15</h2>
+      <div class="workload">
+        <div class="cpu">
+          <div class="used_percent"></div>
+        </div>
+        <div class="memory">
+          <div class="used_percent"></div>
+          <div class="used_kb"></div>
+          <div class="total_kb"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="192-168-17-16" class="nodes">
+      <h2>Workload 192.168.15.16</h2>
+      <div class="workload">
+        <div class="cpu">
+          <div class="used_percent"></div>
+        </div>
+        <div class="memory">
+          <div class="used_percent"></div>
+          <div class="used_kb"></div>
+          <div class="total_kb"></div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/jquery"></script>
+
+    <script>
+
+      function dasherize(string) {
+        return string.split('.').join('-');
+      }
+
+      function dotterize(string) {
+        return string.split('-').join('.');
+      }
+
+      function renderWorkloadFor(address, workload) {
+        var dasherizedAddress = dasherize(address);
+        $("#" + dasherizedAddress + " .workload .cpu .used_percent").html(workload.cpu.used_percent);
+        $("#" + dasherizedAddress + " .workload .memory .used_percent").html(workload.memory.used_percent);
+        $("#" + dasherizedAddress + " .workload .memory .used_kb").html(workload.memory.used);
+        $("#" + dasherizedAddress + " .workload .memory .total_kb").html(workload.memory.total);
+      }
+
+      // listen to the stream
+      var socket = io();
+      socket.on('workload', function(response) {
+        renderWorkloadFor(response.ip_address, response.workload);
+      });
+
+
+    </script>
+  </body>
+
+
+</html>
