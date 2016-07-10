@@ -8,6 +8,12 @@ tags: setup master howto
 order: 50
 ---
 
+
+OUTDATED!
+
+
+
+
 This manual can be very confusing for unexperienced users. We had to read many, many tutorials our own because if it doesn't work, you'll have no idea where to start to investigate. To make it as easy as possible we have split the tutorial in 4 parts. Three of which are very easy, but the last one can be challenging for some users.
 
 * Part 1: Make the Raspberry Pi's IP address static

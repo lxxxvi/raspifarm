@@ -1,12 +1,19 @@
 ---
 layout: howto
-title:  "Install a DNS server"
+title:  "Install DNSmasq"
 date:   2016-04-25 12:00:00 +0200
 description: "Speed up the network traffic and have your own top-level Domain: http://whatever-you-like.raspifarm"
 difficulty: medium
 tags: setup master howto
 order: 50
 ---
+
+
+## DNSmasq for DHCP and DNS
+
+
+
+REWRITE
 
 We wanted to have our own "intranet" with our own local-only domain. Therefore we have to make use of a DNS server that routes HTTP requests to an Apache server that runs in the same network.
 

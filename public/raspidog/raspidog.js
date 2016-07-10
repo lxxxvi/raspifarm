@@ -1,3 +1,6 @@
+
+const NODE_PORT = 3002;
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -102,6 +105,6 @@ function workloadFor(ipAddress, socket) {
 };
 
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+http.listen(NODE_PORT, function(){
+  console.log('listening on *:' + NODE_PORT);
 });

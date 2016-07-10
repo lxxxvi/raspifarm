@@ -3,5 +3,5 @@
 Example: 
 
 ```shell
-ansible-playbook -i ./raspifarm-inventory ./raspifarm-essentials.yml
+ansible-playbook -i [inventory-file] [playbook]
 ```

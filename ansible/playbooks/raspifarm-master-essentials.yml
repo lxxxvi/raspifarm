@@ -1,0 +1,105 @@
+---
+- hosts: raspifarm-master
+  connection: local
+  vars:
+    raspi_farm_dir: /home/farmer/raspifarm
+  become: yes
+  tasks:
+
+    # RubyGems
+    - name: Install RubyGems
+      apt: 
+        name: rubygems
+        state: present
+
+    # # Jekyll
+    # - name: Install Jekyll
+    #   gem: 
+    #     name: jekyll
+    #     state: present
+
+    # dnsmasq 
+    - name: Install dnsmasq
+      apt: 
+        name: dnsmasq
+        state: present
+
+    - name: Stop dnsmasq
+      service:
+        name: dnsmasq
+        state: stopped
+
+    - copy: 
+        src: configs/dnsmasq.conf
+        dest: /etc/dnsmasq.conf
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+
+    - name: Start dnsmasq
+      service:
+        name: dnsmasq
+        state: started
+
+    # Apache 
+    - name: Install apache
+      apt: 
+        name: apache2
+        state: present
+
+    - name: Stop apache2
+      service:
+        name: apache2
+        state: stopped
+
+    - name: Disable default config 
+      command: a2dissite 000-default.conf
+
+    - copy: 
+        src: configs/raspifarm.conf
+        dest: /etc/apache2/sites-available/raspifarm.conf
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+
+    - name: Enable raspifarm config
+      command: a2ensite raspifarm.conf
+
+    - name: Start apache
+      service:
+        name: apache2
+        state: started
+
+    - name: Reload apache
+      service: 
+        name: apache2
+        state: reloaded
+
+    # nodejs Stuff and Raspidog
+    - name: Install nodejs
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Install and upgrade npm
+      npm:
+        name: npm
+        global: yes
+
+    - name: Install pm2
+      npm: 
+        name: pm2
+        global: yes
+
+    - name: Install raspidog
+      command: npm install {{ raspi_farm_dir }}/public/raspidog/
+
+    - name: Stop raspidog
+      command: pm2 stop {{ raspi_farm_dir }}/public/raspidog/raspidog.js > /dev/null 2>&1
+      ignore_errors: yes
+
+    - name: Start raspidog server
+      command: pm2 start {{ raspi_farm_dir }}/public/raspidog/raspidog.js
+
