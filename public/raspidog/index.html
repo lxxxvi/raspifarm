@@ -9,34 +9,65 @@
   </head>
   <body>
 
-    <div id="192-168-17-15" class="nodes">
-      <h2>Workload 192.168.17.15</h2>
-      <div class="workload">
-        <div class="cpu">
-          <div class="used_percent"></div>
-        </div>
-        <div class="memory">
-          <div class="used_percent"></div>
-          <div class="used_kb"></div>
-          <div class="total_kb"></div>
+    <div class="nodes">
+
+      <div id="192-168-17-15" class="node">
+        <h2>192.168.17.15</h2>
+        <div class="workload">
+          <div class="cpu">
+            <div class="used_percent"></div>
+          </div>
+          <div class="memory">
+            <div class="used_percent"></div>
+            <div class="used_kb"></div>
+            <div class="total_kb"></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div id="192-168-17-16" class="nodes">
-      <h2>Workload 192.168.15.16</h2>
-      <div class="workload">
-        <div class="cpu">
-          <div class="used_percent"></div>
-        </div>
-        <div class="memory">
-          <div class="used_percent"></div>
-          <div class="used_kb"></div>
-          <div class="total_kb"></div>
+      <div id="192-168-17-16" class="node">
+        <h2>192.168.17.16</h2>
+        <div class="workload">
+          <div class="cpu">
+            <div class="used_percent"></div>
+          </div>
+          <div class="memory">
+            <div class="used_percent"></div>
+            <div class="used_kb"></div>
+            <div class="total_kb"></div>
+          </div>
         </div>
       </div>
-    </div>
 
+      <div id="192-168-17-17" class="node">
+        <h2>192.168.17.17</h2>
+        <div class="workload">
+          <div class="cpu">
+            <div class="used_percent"></div>
+          </div>
+          <div class="memory">
+            <div class="used_percent"></div>
+            <div class="used_kb"></div>
+            <div class="total_kb"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="192-168-17-18" class="node">
+        <h2>192.168.17.18</h2>
+        <div class="workload">
+          <div class="cpu">
+            <div class="used_percent"></div>
+          </div>
+          <div class="memory">
+            <div class="used_percent"></div>
+            <div class="used_kb"></div>
+            <div class="total_kb"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/jquery"></script>
@@ -65,6 +96,9 @@
         renderWorkloadFor(response.ip_address, response.workload);
       });
 
+      socket.on('date', function(response) {
+        console.log("date", response);
+      });
 
     </script>
   </body>

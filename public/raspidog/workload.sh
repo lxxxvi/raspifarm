@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 #
 #  1  MemAvailable=`snmpget -v 2c -c $PASSWORD -O qv $NASIP 1.3.6.1.4.1.2021.4.6.0`
 #  2  Memtotal=`snmpget -v 2c -c $PASSWORD -O qv $NASIP 1.3.6.1.4.1.2021.4.5.0`
@@ -20,6 +19,7 @@
 # iso.3.6.1.2.1.25.2.3.1.5.8 = INTEGER: 12260
 
 
+# CPU_IDLE=".1.3.6.1.4.1.2021.11.11.0"
 CPU_IDLE=".1.3.6.1.4.1.2021.11.11.0"
 
 MEMORY_AVAILABLE=".1.3.6.1.4.1.2021.4.6.0"

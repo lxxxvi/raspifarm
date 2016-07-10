@@ -1,14 +1,44 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: "Arial", sans-serif;
+  text-align: center;
+}
+
+.nodes {
+  display: -webkit-box;      
+  display: -moz-box;         
+  display: -ms-flexbox;      
+  display: -webkit-flex;     
+  display: -webkit-flex;
+  display: flex;
+
+  flex-direction: row;
+}
+
+.node {
+  flex-grow: 1;
+  background-color: #8eaeff;
+}
+
+.workload > div {
+  margin: 30px 0;
+}
+
+.workload {
+  font-size: 28px;
 }
 
 .cpu::before {
   content: 'CPU ';
+  font-size: 14px;
+  color: #555;
 }
 
 .memory::before {
   content: 'Memory ';
+  color: #555;
+  font-size: 14px;
 }
 
 .cpu .used_percent::after, .memory .used_percent::after {
@@ -16,9 +46,13 @@
 }
 
 .memory .used_kb::after {
-  content: 'KB used';
+  content: ' KB used';
+  font-size: 14px;
+  color: #555;
 }
 
 .memory .total_kb::after {
-  content: 'KB total';
+  content: ' KB total';
+  font-size: 14px;
+  color: #555;
 }

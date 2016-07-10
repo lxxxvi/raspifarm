@@ -50,11 +50,12 @@ io.on('connection', function(socket) {
 // deliver workloads for hosts
 
 function deliverWorkloads(socket) {
+  // console.log('delivering');
   [
     '192.168.17.15',
     '192.168.17.16',
     '192.168.17.17',
-    '192.168.17.18',
+    '192.168.17.18' 
   ].map(function(address) {
     workloadFor(address, socket);
   });
@@ -70,7 +71,7 @@ function workloadFor(ipAddress, socket) {
         var memory_available  = workload[1] - 0;   // 745392
         var memory_total      = workload[2] - 0;   // 948012
         var memory_shared     = workload[3] - 0;   // 12260
-        var memory_buffer     = workload[4] - 0;   // 16728
+        var memory_buffer     = 0; // workload[4] - 0;   // 16728
         var memory_cached     = workload[5] - 0;   // 147876
 
         // console.log(cpu_idle,memory_available,memory_total,memory_shared,memory_buffer,memory_cached);
