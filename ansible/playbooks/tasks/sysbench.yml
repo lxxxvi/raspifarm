@@ -1,0 +1,5 @@
+---
+- name: Install sysbench
+  apt: 
+    name: sysbench
+    state: present

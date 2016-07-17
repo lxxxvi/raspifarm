@@ -1,0 +1,9 @@
+---
+- hosts: raspifarm-slaves
+  remote_user: farmer
+  become: yes
+  tasks:
+    - include: tasks/sysbench.yml
+
+    - name: Sysbench stresstest (60s / CPU)
+      command: sysbench --max-time=60 --test=cpu --cpu-max-prime=200000 --num-threads=8 run 

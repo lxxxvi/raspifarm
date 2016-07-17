@@ -1,0 +1,23 @@
+---
+- name: Install SNMPD
+  apt: 
+    name: snmpd
+    state: present
+
+- name: Stop SNMPD
+  service:
+    name: snmpd
+    state: stopped
+
+- copy: 
+    src: configs/snmpd.conf
+    dest: /etc/snmp/snmpd.conf
+    owner: root
+    group: root
+    mode: 0600
+    backup: yes
+
+- name: Start SNMPD
+  service:
+    name: snmpd
+    state: started

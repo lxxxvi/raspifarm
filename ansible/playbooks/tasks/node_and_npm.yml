@@ -1,0 +1,10 @@
+---
+- name: Install nodejs
+  apt:
+    name: nodejs
+    state: present
+
+- name: Install and upgrade npm
+  npm:
+    name: npm
+    global: yes
