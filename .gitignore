@@ -27,6 +27,9 @@ jspm_packages
 *.sqlite3
 *.sqlite3-journal
 
+jupyterhub.sqlite
+jupyterhub_cookie_secret
+
 /tmp
 /.idea/
 _site
