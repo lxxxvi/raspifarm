@@ -1,21 +1,17 @@
 ---
 layout: howto
 title:  "Install DNSmasq"
-date:   2016-04-25 12:00:00 +0200
-description: "Speed up the network traffic and have your own top-level Domain: http://whatever-you-like.raspifarm"
+description: "DHCP and DNS in one package"
 difficulty: medium
 tags: setup master howto
 order: 50
 ---
 
+A cluster is a network of computers. Our master node has the responsibility over the IP addresses that are assigned to the participating hosts within the network. Therefore, we're going to need an DHCP server running on the master node.
 
-## DNSmasq for DHCP and DNS
+Also, we wanted to have our own "intranet" with our own local-only domain. That's why we're going  to make use of a DNS server that routes HTTP requests to an webserver (which also runs on the same host).
 
-
-
-REWRITE
-
-We wanted to have our own "intranet" with our own local-only domain. Therefore we have to make use of a DNS server that routes HTTP requests to an Apache server that runs in the same network.
+In this tutorial, we show how to install `dnsmasq` that provides the functionality of a DHCP server and a DNS server. 
 
 ## Installation
 
@@ -27,19 +23,46 @@ sudo apt-get install dnsmasq
 
 ## Configuration
 
-Now we have to make some configuration on the server. We want to have our own local-only domain named ".raspifarm".  
-The configuration file for the server is  `/etc/dnsmasq.conf`, we ended up with this configuration (rest is commented out)
+Next, we have to configure the DHCP and DNS.
+
+### DHCP 
+
+DHCP is going to assign IP addresses to hosts that join the network without a static IP address. The IP addresses will be in the range of 50 - 99 in our subnet. The corresponding directives in the configuration file are:
+
+* `interface=`
+* `dhcp-range=`
+* `dhcp-option=`
+* `dhcp-authoritative`
+
+### DNS
+
+We also want to have our own local-only domain named ".raspifarm". This, among others, can be achieved with a DNS server. The directives for the DNS servers are:
+
+* `domain-needed`
+* `bogus-priv`
+* `local=`
+* `address=`
+* `expand-hosts`
+* `domain=`
+
+### Summary of dnsmasq configuration file
+
+The configuration file for dnsmasq is here: `/etc/dnsmasq.conf`. 
+We ended up with this configuration:
 
 ```shell
 domain-needed
 bogus-priv
 local=/raspifarm/
 address=/raspifarm/192.168.17.1
+interface=eth0
 expand-hosts
 domain=raspifarm
+dhcp-range=192.168.17.50,192.168.17.99,12h
+dhcp-option=option:router,192.168.17.1
+dhcp-authoritative
 ```
 
-In a nutshell, with this configuration all requests to [anything].raspifarm are redirected to 192.168.17.1 (to itself).
 
 ## Restart the server
 
@@ -49,4 +72,4 @@ sudo service dnsmasq restart
 
 ## Next step
 
-In order to interpret the requests to [anything].raspifarm, we have [installed an Apache server](/howto/install-apache) that handles the requests and routes them to corresponding applications.
+In order to interpret the requests to `http://[anything].raspifarm`, we have [installed an Apache server](/howto/install-apache) that handles the requests and routes them to corresponding applications.
