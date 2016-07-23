@@ -1,7 +1,20 @@
 
 const NODE_PORT = 3002;
 
-var app = require('express')();
+const HOSTS = [ 
+  '192.168.17.1',
+  '192.168.17.11',
+  '192.168.17.12',
+  '192.168.17.13',
+  '192.168.17.14',
+  '192.168.17.15',
+  '192.168.17.16',
+  '192.168.17.17',
+  '192.168.17.18',
+]
+
+var express = require('express');
+var app =  express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
@@ -10,20 +23,54 @@ sh.config.silent = true;
 require('shelljs/global');
 
 
+
 // ROUTES
+
+app.use('/js'     , express.static('js'));
+app.use('/css'    , express.static('css'));
+app.use('/images' , express.static('images'));
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/jquery', function(req, res){
+/*
+app.get('/css/foundation.min.css', function(req, res) { 
+  res.sendFile(__dirname + '/css/foundation.min.css');
+});
+
+app.get('/js/foundation.min.js', function(req, res) { 
+  res.sendFile(__dirname + '/js/foundation.min.js');
+});
+
+app.get('/js/what-input.js', function(req, res) { 
+  res.sendFile(__dirname + '/js/what-input.js');
+});
+
+app.get('/jquery', function(req, res) {
   res.sendFile(__dirname + '/node_modules/jquery/dist/jquery.min.js');
 });
 
 app.get('/stylesheet', function(req, res) {
   res.sendFile(__dirname + '/css/raspifarm-dog.css')
 });
+*/
 
+
+// Initialize available hosts 
+var available_hosts = [];
+
+HOSTS.map(function(host) {
+  var cmd = __dirname + '/bin/ping.sh ' + host;
+  exec(cmd, function(status, output) {
+    if(output.trim() == '1') {
+      console.log(host + ' is up');
+      available_hosts.push(host);
+    } else {
+      console.log(host + ' not up');
+    }
+  });
+});
 
 // CONNECTIONS
 
@@ -54,19 +101,14 @@ io.on('connection', function(socket) {
 
 function deliverWorkloads(socket) {
   // console.log('delivering');
-  [
-    '192.168.17.15',
-    '192.168.17.16',
-    '192.168.17.17',
-    '192.168.17.18' 
-  ].map(function(address) {
+  available_hosts.map(function(address) {
     workloadFor(address, socket);
   });
 }
 
 function workloadFor(ipAddress, socket) {
 
-    exec(__dirname + '/workload.sh ' + ipAddress, function(status, output) {
+    exec(__dirname + '/bin/workload.sh ' + ipAddress, function(status, output) {
 
       if(status === 0) {
         var workload = output.split(',');
