@@ -8,24 +8,24 @@
   tasks:
 
     - include: tasks/bash_profile.yml
-    # - include: tasks/dnsmasq.yml
-    # - include: tasks/apache.yml
-    # - include: tasks/node_and_npm.yml
-    # - include: tasks/rsync.yml
+    - include: tasks/dnsmasq.yml
+    - include: tasks/apache.yml
+    - include: tasks/node_and_npm.yml
+    - include: tasks/rsync.yml
 
 
-    # - name: Install pm2
-    #   npm: 
-    #     name: pm2
-    #     global: yes
+    - name: Install pm2
+      npm: 
+        name: pm2
+        global: yes
 
-    # - name: Install raspidog
-    #   command: npm install {{ raspi_farm_dir }}/public/raspidog/
+    - name: Install raspidog
+      command: npm install {{ raspi_farm_dir }}/public/raspidog/
 
-    # - name: Stop raspidog
-    #   command: pm2 stop {{ raspi_farm_dir }}/public/raspidog/raspidog.js > /dev/null 2>&1
-    #   ignore_errors: yes
+    - name: Stop raspidog
+      command: pm2 stop {{ raspi_farm_dir }}/public/raspidog/raspidog.js > /dev/null 2>&1
+      ignore_errors: yes
 
-    # - name: Start raspidog server
-    #   command: pm2 start {{ raspi_farm_dir }}/public/raspidog/raspidog.js
+    - name: Start raspidog server
+      command: pm2 start {{ raspi_farm_dir }}/public/raspidog/raspidog.js
 
