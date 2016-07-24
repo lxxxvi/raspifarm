@@ -6,3 +6,5 @@
 
     - include: tasks/snmpd.yml
     - include: tasks/sysbench.yml
+    - include: tasks/rsync.yml
+

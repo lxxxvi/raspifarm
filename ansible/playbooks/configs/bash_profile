@@ -1,0 +1,3 @@
+export PATH=$PATH:/home/farmer/spark/bin/
+export SPARK_HOME=/home/farmer/spark/
+export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/:$SPARK_HOME/python/lib/py4j-0.9-src.zip

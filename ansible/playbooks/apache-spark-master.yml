@@ -27,11 +27,22 @@
         src: "{{ downloaded_file }}"
         dest: "{{ home_dir }}"
 
+    - name: "Delete ~/spark file, if exists"
+      file:
+        path: "{{ target_dir }}"
+        state: absent
+
     - name: Move unpacked directory to ~/spark
       command: "mv {{ home_dir }}/{{ unarchived_dir }} {{ target_dir }}"
 
-    - copy: 
-        src: "configs/spark-slaves"
-        dest: "{{ spark_config_dir }}/slaves"
+    - name: "Copy configuration files"
+      copy: 
+        src: "configs/spark/{{ item }}"
+        dest: "{{ spark_config_dir }}/{{ item }}"
         mode: 0644
         backup: yes
+      with_items:
+        - "slaves"
+        - "log4j.properties"
+        - "spark-env.sh"
+

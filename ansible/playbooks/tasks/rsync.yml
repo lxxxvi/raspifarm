@@ -1,0 +1,6 @@
+---
+- name: Install rsync
+  apt: 
+    name: rsync
+    state: present
+    force: yes
