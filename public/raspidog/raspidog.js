@@ -26,35 +26,28 @@ require('shelljs/global');
 
 // ROUTES
 
-app.use('/js'     , express.static('js'));
-app.use('/css'    , express.static('css'));
-app.use('/images' , express.static('images'));
 
+// static assets
+[
+  '/images/foundation.svg',
+  '/images/jquery.svg',
+  '/images/socket-io.svg',
+  '/images/nodejs.svg',
+  '/css/foundation.min.css',
+  '/js/what-input.js',
+  '/js/foundation.min.js',
+  '/js/jquery.min.js'
+].map(function(asset_path) {
+  app.get(asset_path, function(req, res){
+    res.sendFile(__dirname + asset_path);
+  });
+});
+
+
+// index 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
-
-/*
-app.get('/css/foundation.min.css', function(req, res) { 
-  res.sendFile(__dirname + '/css/foundation.min.css');
-});
-
-app.get('/js/foundation.min.js', function(req, res) { 
-  res.sendFile(__dirname + '/js/foundation.min.js');
-});
-
-app.get('/js/what-input.js', function(req, res) { 
-  res.sendFile(__dirname + '/js/what-input.js');
-});
-
-app.get('/jquery', function(req, res) {
-  res.sendFile(__dirname + '/node_modules/jquery/dist/jquery.min.js');
-});
-
-app.get('/stylesheet', function(req, res) {
-  res.sendFile(__dirname + '/css/raspifarm-dog.css')
-});
-*/
 
 
 // Initialize available hosts 
