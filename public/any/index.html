@@ -2,13 +2,51 @@
 <html>
   <head>
     <title>Welcome to the Raspifarm!</title>
+    <link rel="stylesheet" href="css/foundation.min.css">
   </head>
   <body>
-    
-    <h1>raspifarm</h1>
-    <a href="http://dog.raspifarm">Dog (Monitoring Tool)</a><br />
-    <a href="http://jupyterhub.raspifarm">Jupyterhub</a> (make sure you have JupyterHub running)<br />
-    sudo jupyterhub --no-ssl --port 8000
 
+    <div class="row">
+      <div class="small-12 columns">
+        <h1>Welcome to raspifarm</h1>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="small-12 columns">
+        <div class="panel callout primary">
+          <h2>raspidog</h2>
+          <a href="http://dog.raspifarm">http://dog.raspifarm</a>
+          <p>Monitor the nodes in the cluster</p>
+
+          <p>
+            <h5>Start raspidog, if not running yet...</h5>
+            <pre class="callout default">pm2 start /home/farmer/raspifarm/public/raspidog/raspidog.js</pre>
+
+            <h5>If it's alrady running, then restart it</h5>
+            <pre class="callout default">pm2 restart raspidog</pre>
+
+            <h5>Sometimes you need to restart apache</h5>
+            <pre class="callout default">sudo service apache2 restart</pre>
+          </p>
+        </div>
+      </div>
+
+      <div class="small-12 columns">
+        <div class="panel callout primary">
+          <h2>JupyterHub</h2>
+          <a href="http://jupyterhub.raspifarm">http://jupyterhub.raspifarm</a>
+
+          <p>
+            <h5>Make sure you have the Hub running...</h5>
+            <pre class="callout default">sudo jupyterhub --no-ssl --port 8000</pre>
+
+            <h5>Sometimes you need to restart apache</h5>
+            <pre class="callout default">sudo service apache2 restart</pre>
+          </p>
+        </div>
+      </div>
+    </div>
+   
   </body>
 </html>
