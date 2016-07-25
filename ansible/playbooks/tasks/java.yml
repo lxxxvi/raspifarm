@@ -1,0 +1,6 @@
+---
+- name: Install Java
+  apt: 
+    name: oracle-java8-jdk
+    state: present
+    force: yes
