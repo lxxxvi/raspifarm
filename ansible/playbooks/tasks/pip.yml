@@ -1,0 +1,20 @@
+---
+- name: Install pip
+  apt:
+    name: "{{ item }}"
+    state: present
+    force: yes
+  with_items:
+    - "python-pip"
+    - "python-dev"
+    - "build-essential"
+
+- name: Upgrade pip
+  pip:
+    name: pip
+    state: present
+
+- name: Install virtualenv
+  pip:
+    name: virtualenv
+    state: present

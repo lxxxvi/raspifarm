@@ -1,0 +1,9 @@
+---
+- name: 'Copy .bash_profile to home'
+  copy: 
+    src: configs/bash_profile
+    dest: "{{ home_dir }}/.bash_profile"
+    owner: farmer
+    group: admin
+    mode: 0644
+    backup: yes

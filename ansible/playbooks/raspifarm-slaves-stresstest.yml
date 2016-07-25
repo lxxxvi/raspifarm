@@ -2,6 +2,7 @@
 - hosts: raspifarm-slaves
   remote_user: farmer
   become: yes
+  serial: 8
   tasks:
     - include: tasks/sysbench.yml
 

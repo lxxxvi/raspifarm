@@ -2,13 +2,16 @@
 - hosts: raspifarm-master
   connection: local
   vars:
+    home_dir: /home/farmer
     raspi_farm_dir: /home/farmer/raspifarm
   become: yes
   tasks:
 
+    - include: tasks/bash_profile.yml
     - include: tasks/dnsmasq.yml
     - include: tasks/apache.yml
     - include: tasks/node_and_npm.yml
+    - include: tasks/rsync.yml
 
 
     - name: Install pm2

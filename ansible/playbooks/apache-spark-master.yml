@@ -1,0 +1,48 @@
+---
+- hosts: raspifarm-master
+  connection: local
+  vars:
+    home_dir: "/home/farmer"
+    downloads_dir: "{{ home_dir }}/Downloads"
+    remote_url: "http://mirror.switch.ch/mirror/apache/dist/spark/spark-1.6.2/spark-1.6.2-bin-hadoop2.6.tgz"
+    spark_hadoop_file: "spark-1.6.2-bin-hadoop2.6.tgz"
+    downloaded_file: "{{ downloads_dir }}/{{ spark_hadoop_file }}"
+    unarchived_dir: "spark-1.6.2-bin-hadoop2.6"
+    target_dir: "{{ home_dir }}/spark"
+    spark_config_dir: "{{ home_dir }}/spark/conf/"
+  tasks:
+    - name: Delete previously downloaded file
+      file: 
+        path: "{{ downloaded_file }}"
+        state: absent
+
+    - name: Download Spark (including Hadoop)
+      get_url:
+        url: "{{ remote_url }}"
+        dest: "{{ downloaded_file }}"
+        mode: 0440
+
+    - name: Unpack Spark Hadoop
+      unarchive: 
+        src: "{{ downloaded_file }}"
+        dest: "{{ home_dir }}"
+
+    - name: "Delete ~/spark file, if exists"
+      file:
+        path: "{{ target_dir }}"
+        state: absent
+
+    - name: Move unpacked directory to ~/spark
+      command: "mv {{ home_dir }}/{{ unarchived_dir }} {{ target_dir }}"
+
+    - name: "Copy configuration files"
+      copy: 
+        src: "configs/spark/{{ item }}"
+        dest: "{{ spark_config_dir }}/{{ item }}"
+        mode: 0644
+        backup: yes
+      with_items:
+        - "slaves"
+        - "log4j.properties"
+        - "spark-env.sh"
+
