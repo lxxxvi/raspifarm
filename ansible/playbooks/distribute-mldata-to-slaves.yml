@@ -1,0 +1,24 @@
+---
+- hosts: raspifarm-slaves
+  remote_user: farmer
+  vars:
+    mldata_dir: "/home/farmer/mldata/"
+  become: yes
+  tasks:
+
+    - include: tasks/rsync.yml
+
+    - name: "Synchronize spark dir to slave nodes"
+      synchronize:
+        src: "{{ mldata_dir }}"
+        dest: "{{ mldata_dir }}"
+        mode: push
+        rsync_opts:
+          - "--exclude=.AppleDouble"
+
+    - name: "Change ownership of {{ mldata_dir }} to farmer:admin"
+      file: 
+        path: "{{ mldata_dir }}"
+        group: "admin"
+        owner: "farmer"
+        recurse: yes
