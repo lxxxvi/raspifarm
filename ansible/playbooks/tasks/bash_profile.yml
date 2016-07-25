@@ -8,11 +8,11 @@
     mode: 0644
     backup: yes
 
-- name: "Include .bash_profile in .bashrc"
-  lineinfile: 
-    dest: "/home/farmer/{{ item }}" 
-    line: "if [ -f ~/.bash_profile ]; then . ~/.bash_profile; fi"
-    state: present
-  with_items:
-    - ".bashrc"
-    - ".profile"
+# - name: "Include .bash_profile in .bashrc"
+#   lineinfile: 
+#     dest: "/home/farmer/{{ item }}" 
+#     line: "if [ -f ~/.bash_profile ]; then . ~/.bash_profile; fi"
+#     state: present
+#   with_items:
+#     - ".bashrc"
+#     - ".profile"

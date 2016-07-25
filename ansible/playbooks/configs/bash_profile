@@ -1,3 +1,21 @@
+
+echo  ""
+echo  "     _   _   _   _   _   _   _       "
+echo  "    / \ / \ / \ / \ / \ / \ / \      "
+echo  "   ( W | E | L | C | O | M | E )     "
+echo  "    \_/ \_/ \_/ \_/ \_/ \_/ \_/      "
+echo  "              _   _                  "
+echo  "             / \ / \                 "
+echo  "            ( T | O )                "
+echo  "             \_/ \_/                 "
+echo  "  _   _   _   _   _   _   _   _   _  "
+echo  " / \ / \ / \ / \ / \ / \ / \ / \ / \ "
+echo  "( R | A | S | P | I | F | A | R | M )"
+echo  " \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ "
+echo  ""
+
+[[ -r ~/.profile ]] && . ~/.profile
+
 export PATH=$PATH:/home/farmer/spark/bin/
 export SPARK_HOME=/home/farmer/spark/
 export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python/:$SPARK_HOME/python/lib/py4j-0.9-src.zip
