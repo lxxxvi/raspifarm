@@ -7,6 +7,10 @@ difficulty: medium
 order: 50
 ---
 
+{% include ansible-icon.html %} Available in a [Ansible Playbook]({{ site.baseurl }}/howtos/use-ansible-playbooks) `raspifarm-master-essentials.yml`
+
+---
+
 Sometimes you want to see how your nodes in your cluster are doing. 
 We made therefore a tiny web application that displays the CPU and memory usage of all nodes.
 

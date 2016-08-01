@@ -1,11 +1,14 @@
 ---
 layout: howto
 title:  "Install Apache Spark"
-date:   2016-07-19 15:00:00 +0200
-description: How to install Apache Spark on the cluster
+description: Install Apache Spark on the cluster
 tags: howto machinelearning master slave spark apache cluster installation
 difficulty: advanced
-order: 50
+order: 1
+---
+
+{% include ansible-icon.html %} Available as [Ansible Playbook]({{ site.baseurl }}/howtos/use-ansible-playbooks) `apache-spark-master.yml`
+
 ---
 
 ## Prerequisites

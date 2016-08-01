@@ -1,0 +1,14 @@
+<h3>{% icon fa-graduation-cap %} Machine Learning Howtos</h3>
+
+{% assign orderedHowtos = site.howtos | sort: "order"  %}
+
+<ul class="list-group">
+  {% for howto in orderedHowtos %}
+    {% if howto.tags contains "machinelearning"  %}
+      <a href="{{ howto.url }}" class="list-group-item">
+        <h4>{{ howto.title }}</h4>
+        <p class="list-group-item-text">{{ howto.description }}</p>
+      </a>
+    {% endif %}
+  {% endfor %}
+</ul>

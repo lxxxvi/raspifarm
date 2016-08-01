@@ -7,6 +7,10 @@ tags: setup master howto
 order: 50
 ---
 
+{% include ansible-icon.html %} Available in a [Ansible Playbook]({{ site.baseurl }}/howtos/use-ansible-playbooks) `raspifarm-master-essentials.yml`
+
+---
+
 A cluster is a network of computers. Our master node has the responsibility over the IP addresses that are assigned to the participating hosts within the network. Therefore, we're going to need an DHCP server running on the master node.
 
 Also, we wanted to have our own "intranet" with our own local-only domain. That's why we're going  to make use of a DNS server that routes HTTP requests to an webserver (which also runs on the same host).

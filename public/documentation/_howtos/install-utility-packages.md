@@ -8,6 +8,10 @@ difficulty: easy
 order: 50
 ---
 
+{% include ansible-icon.html %} Available in a [Ansible Playbook]({{ site.baseurl }}/howtos/use-ansible-playbooks) `raspifarm-master-essentials.yml`
+
+---
+
 Below there's a list of utility packages that we decided to install.
 
 ### Package manager update and upgrade
