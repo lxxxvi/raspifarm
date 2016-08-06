@@ -1,6 +1,6 @@
 ---
 layout: howto
-title:  "Using pyspark"
+title:  "Use pyspark"
 date:   2016-07-18 14:00:00 +0200
 description: Using pyspark and working with the python-shell
 tags: howto machinelearning master pyspark python shell

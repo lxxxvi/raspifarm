@@ -12,6 +12,13 @@
     - include: tasks/apache.yml
     - include: tasks/node_and_npm.yml
     - include: tasks/rsync.yml
+    - include: tasks/vim.yml
+    - include: tasks/ruby.yml
+    - include: tasks/rubygems.yml
+    - include: tasks/git.yml
+    - include: tasks/java.yml
+    - include: tasks/pip.yml
+    - include: tasks/scipy.yml
 
 
     - name: Install pm2

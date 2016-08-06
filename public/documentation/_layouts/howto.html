@@ -5,27 +5,30 @@ background-color: "#CE972E"
 ---
 
 <div class="container">
-  <div class="row tags">
+
+  <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-      {% if page.tags %}
-      Tags 
+      {{ content }}
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      {% if page.tags.size > 0 %}
+      Tags<br/>
           {% for tag in page.tags %}
             <span class="label label-success">{{tag}}</span>
           {% endfor %}
       {% endif %}      
-    </div>
-  </div>
-  <div class="row difficulty">
-    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-      {% if page.difficulty %}
-          Difficulty <span class="label label-default">{{page.difficulty}}</span>
+
+      {% if page.difficulty.size > 0 %}
+          <span class="label label-default">Difficulty: {{page.difficulty}}</span>
       {% endif %}      
     </div>
-  </div>
-	<div class="row">
-		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-			{{ content }}
-		</div>
-	</div>
+
+  </div>  
+
+  
 </div>
 

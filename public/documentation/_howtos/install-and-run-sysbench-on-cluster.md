@@ -6,6 +6,10 @@ description: "What is this used for?"
 order: 50
 ---
 
+{% include ansible-icon.html %} Available as [Ansible Playbook]({{ site.baseurl }}/howtos/use-ansible-playbooks) `raspifarm-slaves-stresstest.yml`
+
+---
+
 How to install and run sysbench on cluster
 
 First login to master-node of the cluster via SSH.

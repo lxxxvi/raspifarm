@@ -1,0 +1,6 @@
+---
+- name: Install rubygems
+  apt: 
+    name: rubygems
+    state: present
+    force: yes

@@ -8,7 +8,3 @@
     - "python-numpy"
     - "python-scipy"
     - "python-matplotlib"
-    # - "ipython"
-    # - "python-pandas"
-    # - "python-sympy"
-    # - "python-nose"
