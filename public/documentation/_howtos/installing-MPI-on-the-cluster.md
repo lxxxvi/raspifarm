@@ -14,10 +14,14 @@ Test the installation: `mpiexec -n 5 python -m mpi4py helloworld`
 Create **machinefile** in `~/` with the ip-addresses of the nodes:
 
 ```
-192.168.17.11
-192.168.17.12
-192.168.17.13
-192.168.17.14
+farmer@192.168.17.11
+farmer@192.168.17.12
+farmer@192.168.17.13
+farmer@192.168.17.14
+farmer@192.168.17.15
+farmer@192.168.17.16
+farmer@192.168.17.17
+farmer@192.168.17.18
 ```
 
 Run:
