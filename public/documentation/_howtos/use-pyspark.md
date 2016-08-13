@@ -11,7 +11,7 @@ order: 50
 ## Prerequisites
 
 - Spark needs to be installed in `/home/farmer/spark`
-- Make sure the SPARK_HOME and PYTHONPATH are set to include the correct directories!
+- [Make sure the SPARK_HOME and PYTHONPATH]({{ site.base_url }}/howtos/set-SPARK_HOME-PYTHONPATH) are set to include the correct directories!
 - Make sure the Spark-Cluster is running!
 
 ## Starting the pyspark-shell
