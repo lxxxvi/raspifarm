@@ -23,7 +23,7 @@ sudo raspi-config
 
 ### Allow farmer user to use the camera
 
-Because we're operating with the [farmer](/howtos/setup-admin-group-and-user) user, we'll have to add `farmer` to a group named `video`. 
+Because we're operating with the [farmer](/howtos/setup-admin-group-and-users) user, we'll have to add `farmer` to a group named `video`. 
 
 ```shell
 sudo usermod -a -G video farmer

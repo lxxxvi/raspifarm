@@ -76,4 +76,4 @@ sudo service dnsmasq restart
 
 ## Next step
 
-In order to interpret the requests to `http://[anything].raspifarm`, we have [installed an Apache server](/howto/install-apache) that handles the requests and routes them to corresponding applications.
+In order to interpret the requests to `http://[anything].raspifarm`, we have [installed an Apache server](/howtos/install-apache) that handles the requests and routes them to corresponding applications.

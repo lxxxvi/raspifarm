@@ -14,7 +14,7 @@ Before continuing, you have to answer every statement with yes:
 
 * The designated slave has [Raspbian Jessie Lite installed](/howtos/flush-raspbian-to-sd-card)
 * The designated slave is connected to the network and is powered
-* The master node is properly installed (particularily [DHCP Server](/howtos/install-dhcp-server))
+* The master node is properly installed (particularily [DHCP Server](/howtos/install-dnsmasq))
 * The master node has [nmap](/howtos/install-utility-packages) installed. 
 
 Good, you made it to this point, you're ready to start. Here's an ovierview of tasks you'll need to accomplish:
@@ -75,8 +75,8 @@ ssh pi@192.168.17.55
 ## Assign a static IP address to the slave node
 
 Now it's time to asssign an IP address to the new node. Be aware, that an IP address may not be assigned twice. 
-Follow the instructions on [how to set a static ip address for slave](/howtos/static-ip-addresses-for-slave).
+Follow the instructions on [how to set a static ip address for slave](/howtos/static-ip-addresses-for-slaves).
 
 ## Finish the installation
 
-Now continue with the tasks for the [slave node setup](/setup).
+Now continue with the tasks for the [slave node setup](/setup.html).

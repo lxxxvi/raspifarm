@@ -20,7 +20,7 @@ ansible 192.168.17.11 -m apt -a "name=vim state=present"
 
 Above command would install the `vim package on host 192.168.17.11. All Ansible needs is a user that it can logon to on the remote host.
 
-On our cluster, we should have the [farmer user]({{ site.baseurl }}/howtos/setup-admin-group-and-users) and the corresponding [SSH keys installed on the slave nodes]({{ site.baseurl }}/install-ssh-key-on-slave). That means, that Ansible should have no issues logging into our hosts using the farmer user, and execute stuff with this user.
+On our cluster, we should have the [farmer user]({{ site.baseurl }}/howtos/setup-admin-group-and-users) and the corresponding [SSH keys installed on the slave nodes]({{ site.baseurl }}/howtos/install-ssh-key-on-slave). That means, that Ansible should have no issues logging into our hosts using the farmer user, and execute stuff with this user.
 
 Next, we want to install the `vim` package on all hosts automatically.
 We need to tell Ansible which hosts it should run the installation command on. This can be achieved through a so called "inventory file"

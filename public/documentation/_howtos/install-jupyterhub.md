@@ -43,7 +43,7 @@ Test your installation by starting JupyterHub, like so:
 sudo jupyterhub --no-ssl --port 8000
 ```
 
-Next, open your browser and go to the website `http://192.168.17.1:8000` (assuming you have your [master node configured](/howtos/setup-master) with this IP address). For the login you can use the credentials for the `farmer` user (see [here](/howtos/setup-admin-group-and-users)). Alternatively, you should be able to login with any user that exists on the system.
+Next, open your browser and go to the website `http://192.168.17.1:8000` (assuming you have your [master node configured](/setup.html) with this IP address). For the login you can use the credentials for the `farmer` user (see [here](/howtos/setup-admin-group-and-users)). Alternatively, you should be able to login with any user that exists on the system.
 
 
 ## Make JupyterHub and Jupyter available on .raspifarm intranet
@@ -51,7 +51,7 @@ Next, open your browser and go to the website `http://192.168.17.1:8000` (assumi
 Wouldn't it be nice to have somethig like http://jupyterhub.raspifarm to access the JupyterHub on our intranet?  
 We can configure that on the Apache server.
 
-First thing, make sure you have an [Apache server installed](/howtows/install-apache) and running. Next, install 2 modules to for apache:
+First thing, make sure you have an [Apache server installed](/howtos/install-apache) and running. Next, install 2 modules to for apache:
 
 ```shell
 sudo a2enmod proxy
@@ -92,6 +92,6 @@ Finally, make sure you have JupyterHub running as indicated above (behold `--por
 There can be multiple reasons if it doesn' work. Here are a few points to consider while troubleshooting:
 
 - Are you connected to the master node?
-- Is the [DNS server](/howtos/setup-dns-server) running? (`sudo service dnsmasq status`)
-- Is [Apache](/howtos/setup-apache) running? (`sudo service apache2 status`)
+- Is the [DNS server](/howtos/install-dnsmasq) running? (`sudo service dnsmasq status`)
+- Is [Apache](/howtos/install-apache) running? (`sudo service apache2 status`)
 - Is JupyterHub running? (see above)
