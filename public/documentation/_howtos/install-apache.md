@@ -14,7 +14,7 @@ order: 50
 
 We want to have our own little intranet with a custom, local-only domain named _.raspifarm_. So for example, if a user who is connected to the cluster's network enters "http://home.raspifarm" in a browser, the user shall see a tiny little webpage.  
 Thus, we're going to install an Apache webserver on the master node.  
-For the home page demo, you will have to have a DNS server running, which is configured as described [here](/howto/install-dns-server)
+For the home page demo, you will have to have a DNS server running, which is configured as described [here](/howtos/install-dnsmasq)
 
 
 ## Install apache webserver
