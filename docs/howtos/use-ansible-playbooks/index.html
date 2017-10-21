@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Use Ansible Playbooks</title>
+  <meta name="description" content="Once you have Ansible installed, you are able to run Ansible playbooks. You can also write our own playbooks. But first things first…">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/use-ansible-playbooks/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Use Ansible Playbooks
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p>Once you have <a href="/howtos/install-ansible">Ansible installed</a>, you are able to run Ansible playbooks. You can also write our own playbooks. But first things first…</p>
+
+<h2 id="what-can-ansible-do">What can Ansible do?</h2>
+
+<p>Ansible lets you execute playbooks on remote hosts, automatically. For example, if you want to install a package with <code class="highlighter-rouge">apt</code> you can do so with this shell command:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>ansible 192.168.17.11 -m apt -a <span class="s2">"name=vim state=present"</span>
+</code></pre>
+</div>
+
+<p>Above command would install the `vim package on host 192.168.17.11. All Ansible needs is a user that it can logon to on the remote host.</p>
+
+<p>On our cluster, we should have the <a href="/howtos/setup-admin-group-and-users">farmer user</a> and the corresponding <a href="/howtos/install-ssh-key-on-slave">SSH keys installed on the slave nodes</a>. That means, that Ansible should have no issues logging into our hosts using the farmer user, and execute stuff with this user.</p>
+
+<p>Next, we want to install the <code class="highlighter-rouge">vim</code> package on all hosts automatically.
+We need to tell Ansible which hosts it should run the installation command on. This can be achieved through a so called “inventory file”</p>
+
+<h2 id="inventory-files">Inventory files</h2>
+
+<p>An inventory file in Ansible is a simple text file, where you can list hosts and group them if you want to. In our case, we only have one group, the group of slave nodes, so all we need to write is</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="o">[</span>raspifarm-slaves]
+192.168.17.11
+192.168.17.12
+192.168.17.13
+192.168.17.14
+192.168.17.15
+192.168.17.16
+192.168.17.17
+192.168.17.18
+</code></pre>
+</div>
+
+<p>You can save this either in the default hosts-file <code class="highlighter-rouge">/etc/ansible/hosts</code> or anywhere you want.
+Assuming you have this setting in the default hosts-file, you can make use of the group name “raspifarm-slaves” in the ansible command.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>ansible raspifarm-slaves -m apt -a <span class="s2">"name=vim state=present"</span>
+
+<span class="c"># (if you have the hosts in a seperate file)</span>
+ansible -i <span class="o">[</span>/path/to/your/inventory/file] -m apt -a <span class="s2">"name=vim state=present"</span>
+</code></pre>
+</div>
+
+<p>This will install <code class="highlighter-rouge">vim</code> on every host that the package is not present yet.
+Isn’t this neat?</p>
+
+<p>Let’s talk about playbooks now…</p>
+
+<h2 id="playbooks">Playbooks</h2>
+
+<p>A playbook is a file that Ansible uses as a “recipe”. It contains a list of tasks, that have to be executed on each target host. A playbook could look like `this:</p>
+
+<pre><code class="language-yml`">---
+- hosts: raspifarm-slaves
+  remote_user: farmer
+  become: yes
+  serial: 8
+  tasks:
+    - name: Install sysbench
+      apt: 
+        name: sysbench
+        state: present
+
+    - name: Sysbench stresstest (60s / CPU)
+      command: sysbench --max-time=60 --test=cpu --cpu-max-prime=200000 --num-threads=8 run 
+</code></pre>
+
+<p>This playbook does two things: First it installs a package named <code class="highlighter-rouge">sysbench</code>, if it is not present yet. Secondly, it runs a “stresstest” on the host 60 seconds long using a specific <code class="highlighter-rouge">sysbench</code> command.<br />
+You can read more about playbooks on the official Ansible documentation at <a href="http://docs.ansible.com/ansible/index.html">http://docs.ansible.com/ansible/index.html</a>.</p>
+
+<h2 id="predefined-playbooks">Predefined Playbooks</h2>
+
+<p>For the Raspberry Pi Cluster we have written several Playbooks. It automates stuff regarding deplyoment and setup of the master and slave-nodes.<br />
+That’s why some how-to descriptions here are also available as part of predefined playbooks.</p>
+
+<p>The predefined playbooks can be found in the raspifarm’s GitHub Repository here <a href="https://github.com/lxxxvi/raspifarm/tree/master/ansible/playbooks">https://github.com/lxxxvi/raspifarm/tree/master/ansible/playbooks</a>.</p>
+
+<p>Here, however is an overview of playbooks we have prepared with a short description.</p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Playbook</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">apache-spark-master.yml</code></td>
+      <td>Installs and configures Spark on the Master Node</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">deploy-spark-to-slaves.yml</code></td>
+      <td>Copies the Spark folder to all Slave Nodes</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">distribute-mldata-to-slaves.yml</code></td>
+      <td>Copies the content of folder /home/farmer/mldata/ to all Slave Nodes</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">raspifarm-master-essentials.yml</code></td>
+      <td>Installs and configures the Master Node from scratch</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">raspifarm-slaves-essentials.yml</code></td>
+      <td>Installs and configures the Slave Nodes from scratch</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">raspifarm-slaves-stresstest.yml</code></td>
+      <td>Runs a CPU stress test on slaves</td>
+    </tr>
+  </tbody>
+</table>
+
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      
+      Tags<br/>
+          
+            <span class="label label-success">setup</span>
+          
+            <span class="label label-success">master</span>
+          
+            <span class="label label-success">slaves</span>
+          
+            <span class="label label-success">howto</span>
+          
+            
+
+      
+          <span class="label label-default">Difficulty: medium</span>
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

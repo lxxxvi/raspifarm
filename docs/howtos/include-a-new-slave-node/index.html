@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Include a new slave node into the cluster</title>
+  <meta name="description" content="Here’s the situation:You want to include a Raspberry Pi as a slave node into the cluster.">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/include-a-new-slave-node/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Include a new slave node into the cluster
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p>Here’s the situation:
+You want to include a Raspberry Pi as a slave node into the cluster.</p>
+
+<p>Before continuing, you have to answer every statement with yes:</p>
+
+<ul>
+  <li>The designated slave has <a href="/howtos/flush-raspbian-to-sd-card">Raspbian Jessie Lite installed</a></li>
+  <li>The designated slave is connected to the network and is powered</li>
+  <li>The master node is properly installed (particularily <a href="/howtos/install-dnsmasq">DHCP Server</a>)</li>
+  <li>The master node has <a href="/howtos/install-utility-packages">nmap</a> installed.</li>
+</ul>
+
+<p>Good, you made it to this point, you’re ready to start. Here’s an ovierview of tasks you’ll need to accomplish:</p>
+
+<ol>
+  <li>Log into the master node</li>
+  <li>Search for the designated slave in the network</li>
+  <li>Log into the slave node</li>
+  <li>Assign a static IP address to the slave node</li>
+  <li>Install the SSH key on the slave</li>
+</ol>
+
+<h2 id="log-into-the-master-node">Log into the master node</h2>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>ssh farmer@192.168.17.1
+</code></pre>
+</div>
+
+<h2 id="search-for-the-designated-slave-in-the-network">Search for the designated slave in the network</h2>
+
+<p>Our DHCP server is configured that “guests” in the networ will get IP addresses in the range of 192.168.17.50 - 99. 
+Our designed slave is a guest when connecting for the first time. 
+We have to find our guest, and make it a node with a static IP address.</p>
+
+<p>Precondition: nmap is installed</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo nmap -sP 192.168.17.50-99 | grep Raspberry
+</code></pre>
+</div>
+
+<p>Possible output</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>MAC Address: A1:11:BB:22:33:CC <span class="o">(</span>Raspberry Pi Foundation<span class="o">)</span>
+</code></pre>
+</div>
+
+<p>This is the MAC address of the Raspberry Pi, now we have to find the corresponding IP address like so:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>arp -a | grep -i <span class="s2">"A1:11:BB:22:33:CC"</span>
+</code></pre>
+</div>
+
+<p>Possible output</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>? <span class="o">(</span>192.168.17.55<span class="o">)</span> at a1:11:bb:22:33:cc <span class="o">[</span>ether] on eth0
+</code></pre>
+</div>
+
+<p>That tells us we can connect to 192.168.17.55 using “pi”, since we expect the Pi to be a freshly installed operating system.</p>
+
+<h2 id="log-into-the-slave-node">Log into the slave node</h2>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>ssh pi@192.168.17.55
+</code></pre>
+</div>
+
+<h2 id="assign-a-static-ip-address-to-the-slave-node">Assign a static IP address to the slave node</h2>
+
+<p>Now it’s time to asssign an IP address to the new node. Be aware, that an IP address may not be assigned twice. 
+Follow the instructions on <a href="/howtos/static-ip-addresses-for-slaves">how to set a static ip address for slave</a>.</p>
+
+<h2 id="finish-the-installation">Finish the installation</h2>
+
+<p>Now continue with the tasks for the <a href="/setup.html">slave node setup</a>.</p>
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      
+      Tags<br/>
+          
+            <span class="label label-success">howto</span>
+          
+            <span class="label label-success">setup</span>
+          
+            <span class="label label-success">slave</span>
+          
+            
+
+      
+          <span class="label label-default">Difficulty: medium</span>
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

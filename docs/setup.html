@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Setup</title>
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/setup.html">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #6aae5f
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>Installation and configuration</h2>
+                  
+                    <hr class="small">
+                    
+                      <i aria-hidden="true" class="fa fa-gears fa-5x"></i>
+                    
+                    <h1>
+                      
+                        Setup
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+			<p>In the following sub chapters, we describe what software we are using for our cluster.<br />
+Basically, there’s a difference in the software stack between master node and the slave nodes. 
+The slave nodes are setup quite quickly, although you’ll have to do the same procedure again and again on every node. 
+The installation of the master node is a bit trickier, but it should be doable if you are a little experience working on the command line.</p>
+
+<h2 id="the-farm">“The Farm”</h2>
+
+<p>For unknown reasons, we started to call the cluster “<em>the farm</em>”. We thought, the master node is like the main building on a farm, where everything is orchestrated from. The slave nodes can be seen as sheds, where the animals (=CPUs ;-)) live in and do the work.</p>
+
+<p>There’s also a <em>farmer</em>, who can access all “buildings” and knows how to keep the farm running. On the cluster, the <em>farmer</em> is a user with root privileges, that will have to be created on every node on the <em>farm</em>.</p>
+
+<p>Enough farm-talking, let’s get started…</p>
+
+<hr />
+
+<h3><i class="fa fa-graduation-cap"></i> Master Setup Howtos</h3>
+
+<ul class="list-group">
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/howtos/flush-raspbian-to-sd-card/" class="list-group-item">
+        <h4>Flush Raspbian to SD card</h4>
+        <p class="list-group-item-text">Installing the operating system is really not that difficult, and exciting too!</p>
+      </a>
+    
+  
+    
+      <a href="/howtos/expand-file-system/" class="list-group-item">
+        <h4>Expand the filesystem</h4>
+        <p class="list-group-item-text">The Raspbian image is delivered as a minimal image, in order to use the full size of your SD card, you need to expand the filesystem</p>
+      </a>
+    
+  
+    
+      <a href="/howtos/setup-admin-group-and-users/" class="list-group-item">
+        <h4>Setup an admin group and add user(s)</h4>
+        <p class="list-group-item-text">One user has to do it all: Farmer!</p>
+      </a>
+    
+  
+    
+      <a href="/howtos/change-password-for-pi-user/" class="list-group-item">
+        <h4>Change the password for pi user</h4>
+        <p class="list-group-item-text">You should always change default passwords.</p>
+      </a>
+    
+  
+    
+  
+    
+      <a href="/howtos/set-hostname/" class="list-group-item">
+        <h4>Set the hostname</h4>
+        <p class="list-group-item-text">Like humans, computer wants to have names too</p>
+      </a>
+    
+  
+    
+      <a href="/howtos/install-apache/" class="list-group-item">
+        <h4>Install Apache</h4>
+        <p class="list-group-item-text">In case you want to run websites on your Raspberry Pi</p>
+      </a>
+    
+  
+    
+  
+    
+      <a href="/howtos/install-jupyterhub/" class="list-group-item">
+        <h4>Install JupyterHub</h4>
+        <p class="list-group-item-text">Lets you run code via webbrowser. Attention: It's awesome!</p>
+      </a>
+    
+  
+    
+      <a href="/howtos/generate-ssh-key/" class="list-group-item">
+        <h4>Generate SSH key</h4>
+        <p class="list-group-item-text">Required to login on the slave nodes without a password</p>
+      </a>
+    
+  
+    
+      <a href="/howtos/install-ansible/" class="list-group-item">
+        <h4>Install Ansible</h4>
+        <p class="list-group-item-text">Orchestrate your cluster with Ansible</p>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/howtos/use-ansible-playbooks/" class="list-group-item">
+        <h4>Use Ansible Playbooks</h4>
+        <p class="list-group-item-text">Execute playbooks</p>
+      </a>
+    
+  
+    
+      <a href="/howtos/configure-wifi/" class="list-group-item">
+        <h4>Configure WiFi</h4>
+        <p class="list-group-item-text">Embed your Raspberry Pi into a wireless network</p>
+      </a>
+    
+  
+    
+      <a href="/howtos/configure-port-forwarding/" class="list-group-item">
+        <h4>Do portforwarding</h4>
+        <p class="list-group-item-text">In case you want to use the raspberry as a router for network traffic</p>
+      </a>
+    
+  
+    
+      <a href="/howtos/install-dnsmasq/" class="list-group-item">
+        <h4>Install DNSmasq</h4>
+        <p class="list-group-item-text">DHCP and DNS in one package</p>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/howtos/install-utility-packages/" class="list-group-item">
+        <h4>Install utility packages</h4>
+        <p class="list-group-item-text">Some packages come in handy from time to time.</p>
+      </a>
+    
+  
+    
+  
+</ul>
+
+<hr />
+
+<h3><i class="fa fa-graduation-cap"></i> Slave Setup Howtos</h3>
+
+<ul class="list-group">
+  
+    
+  
+    
+  
+    
+      <a href="/howtos/include-a-new-slave-node/" class="list-group-item">
+        <h4>Include a new slave node into the cluster</h4>
+        <p class="list-group-item-text">New nodes have to be 'discovered' and registered</p>
+      </a>
+    
+  
+    
+  
+    
+      <a href="/howtos/flush-raspbian-to-sd-card/" class="list-group-item">
+        <h4>Flush Raspbian to SD card</h4>
+        <p class="list-group-item-text">Installing the operating system is really not that difficult, and exciting too!</p>
+      </a>
+    
+  
+    
+      <a href="/howtos/expand-file-system/" class="list-group-item">
+        <h4>Expand the filesystem</h4>
+        <p class="list-group-item-text">The Raspbian image is delivered as a minimal image, in order to use the full size of your SD card, you need to expand the filesystem</p>
+      </a>
+    
+  
+    
+      <a href="/howtos/setup-admin-group-and-users/" class="list-group-item">
+        <h4>Setup an admin group and add user(s)</h4>
+        <p class="list-group-item-text">One user has to do it all: Farmer!</p>
+      </a>
+    
+  
+    
+      <a href="/howtos/change-password-for-pi-user/" class="list-group-item">
+        <h4>Change the password for pi user</h4>
+        <p class="list-group-item-text">You should always change default passwords.</p>
+      </a>
+    
+  
+    
+  
+    
+      <a href="/howtos/set-hostname/" class="list-group-item">
+        <h4>Set the hostname</h4>
+        <p class="list-group-item-text">Like humans, computer wants to have names too</p>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/howtos/install-ssh-key-on-slave/" class="list-group-item">
+        <h4>Install the farmer's SSH key on a slave</h4>
+        <p class="list-group-item-text">Easy access on the slave nodes for the farmer user</p>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/howtos/static-ip-addresses-for-slaves/" class="list-group-item">
+        <h4>Static IP addresses for slave nodes</h4>
+        <p class="list-group-item-text">We need to know where our slaves are</p>
+      </a>
+    
+  
+</ul>
+
+		</div>
+	</div>
+</div>
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

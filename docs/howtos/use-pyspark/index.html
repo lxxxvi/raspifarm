@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Use pyspark</title>
+  <meta name="description" content="Prerequisites">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/use-pyspark/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Use pyspark
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li>Spark needs to be installed in <code class="highlighter-rouge">/home/farmer/spark</code></li>
+  <li><a href="/howtos/set-SPARK_HOME-PYTHONPATH">Make sure the SPARK_HOME and PYTHONPATH</a> are set to include the correct directories!</li>
+  <li>Make sure the Spark-Cluster is running!</li>
+</ul>
+
+<h2 id="starting-the-pyspark-shell">Starting the pyspark-shell</h2>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>~/spark/bin/pyspark --master spark://192.168.17.1:7077
+</code></pre>
+</div>
+
+<h2 id="connecting-to-the-cluster-from-the-python-shell">Connecting to the cluster from the python-shell</h2>
+
+<h3 id="open-a-python-shell-from-the-command-line-on-the-master-node">Open a python-shell from the command line on the master node</h3>
+
+<p>On the command line:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>python 
+</code></pre>
+</div>
+
+<h3 id="setup-the-sparkcontext-inside-the-python-shell">Setup the SparkContext inside the python-shell</h3>
+
+<p>Inside the python-shell:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pyspark</span> <span class="kn">import</span> <span class="n">SparkConf</span>
+<span class="kn">from</span> <span class="nn">pyspark</span> <span class="kn">import</span> <span class="n">SparkContext</span>
+
+<span class="n">conf</span> <span class="o">=</span> <span class="n">SparkConf</span><span class="p">()</span>
+<span class="n">conf</span><span class="o">.</span><span class="n">setMaster</span><span class="p">(</span><span class="s">'spark://192.168.17.1:7077'</span><span class="p">)</span>
+<span class="n">conf</span><span class="o">.</span><span class="n">setAppName</span><span class="p">(</span><span class="s">'THE_NAME_OF_YOUR_APP'</span><span class="p">)</span>
+<span class="n">sc</span> <span class="o">=</span> <span class="n">SparkContext</span><span class="p">(</span><span class="n">conf</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>Now you can use the variable ‘sc’ to calculate tasks on the cluster</strong></p>
+
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      
+      Tags<br/>
+          
+            <span class="label label-success">howto</span>
+          
+            <span class="label label-success">machinelearning</span>
+          
+            <span class="label label-success">master</span>
+          
+            <span class="label label-success">pyspark</span>
+          
+            <span class="label label-success">python</span>
+          
+            <span class="label label-success">shell</span>
+          
+            
+
+      
+          <span class="label label-default">Difficulty: advanced</span>
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

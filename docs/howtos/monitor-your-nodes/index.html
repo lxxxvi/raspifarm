@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Monitor your nodes</title>
+  <meta name="description" content=" Available in a Ansible Playbook raspifarm-master-essentials.yml">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/monitor-your-nodes/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Monitor your nodes
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p><img src="/assets/images/ansible-mini.svg" width="20px" />
+ Available in a <a href="/howtos/use-ansible-playbooks">Ansible Playbook</a> <code class="highlighter-rouge">raspifarm-master-essentials.yml</code></p>
+
+<hr />
+
+<p>Sometimes you want to see how your nodes in your cluster are doing. 
+We made therefore a tiny web application that displays the CPU and memory usage of all nodes.</p>
+
+<p><img src="/assets/images/raspidog-overview.png" alt="Raspidog overview" /></p>
+
+<p>You can either install raspidog on your own, or install it via Ansible (see bottom of the page)… the choice is yours.</p>
+
+<h2 id="manual-installation">Manual installation</h2>
+
+<h3 id="things-we-need">Things we need</h3>
+
+<p>Raspidog requries several things to be installed</p>
+
+<ul>
+  <li>Node.js</li>
+  <li>pm2</li>
+  <li>raspidog</li>
+</ul>
+
+<p>Also it requires <a href="/howtos/install-apache">Apache</a> to be installed and running. We need to configure raspidog too.</p>
+
+<h4 id="nodejs">Node.js</h4>
+
+<p>Node.js is a server-side JavaScript environment, we need it to run the raspidog server.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo apt-get install nodejs
+</code></pre>
+</div>
+
+<h4 id="pm2">pm2</h4>
+
+<p>pm2 is a process manager for Node applications. With pm2 you can start and stop Node webapplications in the background.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>npm install -g pm2
+</code></pre>
+</div>
+
+<h4 id="raspidog">raspidog</h4>
+
+<p>“raspidog”, the monitoring tool for the cluster, is available on the <a href="https://github.com/lxxxvi/raspifarm">“raspifarm” repository</a> on GitHub. 
+Clone the repository into the farmers home directory, if it’s not there already.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">## make sure you are logged in as the farmer user</span>
+clone https://github.com/lxxxvi/raspifarm.git ~/raspifarm
+</code></pre>
+</div>
+
+<p>After that, you have to install the dependent packages for raspidog, it’s as easy as</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>npm install -g /home/farmer/raspifarm/public/raspidog/
+</code></pre>
+</div>
+
+<p>That’s it for the installation part.</p>
+
+<h3 id="configuration-and-start-the-application">Configuration and start the application</h3>
+
+<h4 id="configure-apache">Configure Apache</h4>
+
+<p>Apache has to know where to route requests for “http://dog.raspifarm” to. Add a new virtual host to <code class="highlighter-rouge">/etc/apache2/sites-available/raspifarm.conf</code>:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># raspidog</span>
+&lt;VirtualHost <span class="k">*</span>:80&gt;
+  ServerName <span class="s2">"dog.raspifarm"</span>
+  ServerAlias <span class="s2">"raspidog.raspifarm"</span>
+  ServerAdmin webmaster@localhost
+
+  ErrorLog <span class="k">${</span><span class="nv">APACHE_LOG_DIR</span><span class="k">}</span>/error.log
+  CustomLog <span class="k">${</span><span class="nv">APACHE_LOG_DIR</span><span class="k">}</span>/access.log combined
+
+  ProxyPass / http://localhost:3002/
+&lt;/VirtualHost&gt;
+</code></pre>
+</div>
+
+<h4 id="start-the-server">Start the server</h4>
+
+<p>Now, we should be able to start the server via pm2</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>pm2 start /home/farmer/raspifarm/public/raspidog/raspidog.js
+</code></pre>
+</div>
+
+<p>If you have to restart it, do</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>pm2 restart raspidog
+</code></pre>
+</div>
+
+<h4 id="test-it">Test it</h4>
+
+<p>Now you should be able to see the monitoring tool at this URL:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>http://dog.raspifarm
+</code></pre>
+</div>
+
+<p>Alternatively, you should see it here:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>http://192.168.17.1:3002
+</code></pre>
+</div>
+
+<h2 id="installation-via-ansible">Installation via Ansible</h2>
+
+<p>Instead of doing all the fancy stuff above by your own, you could have <a href="/howtos/install-ansible">Ansible</a> install the entire thing for you.<br />
+Simply install Ansible according the instructions, and execute the <code class="highlighter-rouge">raspifarm-master-essentials.yml</code> playbook from the “raspifarm” Repository, like so:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="nb">cd</span> ~/raspifarm/ansible
+ansible-playbook -i ./raspifarm-inventory ./playbooks/raspifarm-master-essentials.yml
+</code></pre>
+</div>
+
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      
+      Tags<br/>
+          
+            <span class="label label-success">master</span>
+          
+            <span class="label label-success">howto</span>
+          
+            
+
+      
+          <span class="label label-default">Difficulty: medium</span>
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

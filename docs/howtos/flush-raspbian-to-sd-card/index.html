@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Flush Raspbian to SD card</title>
+  <meta name="description" content="This document describes how to install the Raspberry Pis for the cluster.There are two version of the operating system">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/flush-raspbian-to-sd-card/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Flush Raspbian to SD card
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p>This document describes how to install the Raspberry Pis for the cluster.
+There are two version of the operating system</p>
+
+<ul>
+  <li>Raspbian Jessie</li>
+  <li>Raspbian Jessie Lite</li>
+</ul>
+
+<p>Jessie Lite is a light-weight version of Jessie, where it does not come with a GUI, so there’s just the command line interface.
+We are going to use Jessie for the Master-Node, and Jessie Lite for the Slave-Nodes.
+The installation for both systems does not differ very much, there are just two different files that can be downloaded from the Raspberry Pi homepage.</p>
+
+<p>For our cluster, we used following images:</p>
+
+<p><strong>Jessie</strong><br />
+2016-03-18-raspbian-jessie.img</p>
+
+<p><strong>Jessie Lite</strong><br />
+2016-03-18-raspbian-jessie-lite.img</p>
+
+<h2 id="flush-the-image-to-the-card">Flush the image to the card</h2>
+
+<p>Depending on your operating system there are different ways to flash the image to the card.
+We followed the tutorial for Mac on this site:
+<a href="">https://www.raspberrypi.org/documentation/installation/installing-images/</a></p>
+
+<p>In a nutshell you have to do following steps</p>
+
+<ol>
+  <li>Download the image(s)</li>
+  <li>Insert an SD card (Suggested <a href="https://www.raspberrypi.org/documentation/installation/sd-cards.md">minimal requirements</a>: 4GB, Class 4)</li>
+  <li>Unmount the SD card’s disk partition</li>
+  <li>Flash the image</li>
+  <li>Eject the SD card</li>
+</ol>
+
+<p>The most thrilling part is step 4, which on the command line on OS X was this:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo dd <span class="nv">bs</span><span class="o">=</span>1m <span class="k">if</span><span class="o">=</span>image.img <span class="nv">of</span><span class="o">=</span>/dev/rdisk&lt;disk# from diskutil&gt;
+</code></pre>
+</div>
+
+<p>Behold <code class="highlighter-rouge">if=image.img</code>, this is where you specify the disk image, so choose either the image for Jessie or Jessie Lite there.
+That <code class="highlighter-rouge">dd</code> operation will take some minutes, depending on the SD cards (writing speed) and the size of the disk image.</p>
+
+<p>After that the SD card is ready to operate.</p>
+
+<p><i class="fa fa-linux fa-5x"></i></p>
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      
+      Tags<br/>
+          
+            <span class="label label-success">setup</span>
+          
+            <span class="label label-success">master</span>
+          
+            <span class="label label-success">slave</span>
+          
+            
+
+      
+          <span class="label label-default">Difficulty: medium</span>
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

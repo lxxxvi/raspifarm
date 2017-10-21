@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Install JupyterHub</title>
+  <meta name="description" content="Here we’re going to install Jupyter and JupyterHub.">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/install-jupyterhub/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Install JupyterHub
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p>Here we’re going to install <a href="http://jupyter.org/">Jupyter</a> and <a href="https://github.com/jupyterhub/jupyterhub">JupyterHub</a>.</p>
+
+<p>Jupyter let’s you write and execute code in a web browser. JupyterHub makes Jupyter available for groups, it’s a thing you install on a server where multiple users can access Jupyter.</p>
+
+<p><strong>Based on these two tutorials</strong></p>
+
+<p><a href="https://arnesund.com/2015/09/21/spark-cluster-on-openstack-with-multi-user-jupyter-notebook/">https://arnesund.com/2015/09/21/spark-cluster-on-openstack-with-multi-user-jupyter-notebook/</a><br />
+<a href="http://thepowerofdata.io/configuring-jupyteripython-notebook-to-work-with-pyspark-1-4-0/">http://thepowerofdata.io/configuring-jupyteripython-notebook-to-work-with-pyspark-1-4-0/</a></p>
+
+<h2 id="install-pip3-and-other-dependencies">Install pip3 and other dependencies</h2>
+
+<p>Before we start, we need to have certain packages installed.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># pip3 package manager for python3 stuff
+sudo apt-get -y install python3-pip
+
+# other dependencies
+sudo apt-get -y install python-dev python-setuptools
+</code></pre>
+</div>
+
+<h2 id="install-jupyterhub-and-jupyter-notebook">Install JupyterHub and Jupyter Notebook</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo pip3 install jupyterhub
+sudo pip3 install jupyter
+</code></pre>
+</div>
+
+<p>Test your installation by starting JupyterHub, like so:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo jupyterhub --no-ssl --port 8000
+</code></pre>
+</div>
+
+<p>Next, open your browser and go to the website <code class="highlighter-rouge">http://192.168.17.1:8000</code> (assuming you have your <a href="/setup.html">master node configured</a> with this IP address). For the login you can use the credentials for the <code class="highlighter-rouge">farmer</code> user (see <a href="/howtos/setup-admin-group-and-users">here</a>). Alternatively, you should be able to login with any user that exists on the system.</p>
+
+<h2 id="make-jupyterhub-and-jupyter-available-on-raspifarm-intranet">Make JupyterHub and Jupyter available on .raspifarm intranet</h2>
+
+<p>Wouldn’t it be nice to have somethig like http://jupyterhub.raspifarm to access the JupyterHub on our intranet?<br />
+We can configure that on the Apache server.</p>
+
+<p>First thing, make sure you have an <a href="/howtos/install-apache">Apache server installed</a> and running. Next, install 2 modules to for apache:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo a2enmod proxy
+sudo a2enmod proxy_http
+</code></pre>
+</div>
+
+<p>Now, amend the Apache configuration for the raspifarm virtual host file <code class="highlighter-rouge">/etc/apache2/sites-available/raspifarm.conf</code>.</p>
+
+<p>Add this configuration at the bottom of the file:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;VirtualHost</span> <span class="err">*:80</span><span class="nt">&gt;</span>
+  ServerName "jupyterhub.raspifarm"
+  ProxyPreserveHost On
+  ProxyRequests off
+
+  ProxyPass /api/kernels/ ws://localhost:8000/api/kernels/
+  ProxyPassReverse /api/kernels/ http://localhost:8000/api/kernels/
+
+  ProxyPass / http://localhost:8000/
+  ProxyPassReverse / http://localhost:8000/
+
+  <span class="nt">&lt;Location</span> <span class="err">~</span> <span class="err">"/(user/[^/]*)/(api/kernels/[^/]+/channels|terminals/websocket)/?"</span><span class="nt">&gt;</span>
+    ProxyPass ws://localhost:8000/
+    ProxyPassReverse ws://localhost:8000/
+  <span class="nt">&lt;/Location&gt;</span>
+<span class="nt">&lt;/VirtualHost&gt;</span>
+</code></pre>
+</div>
+
+<p>Re-start Apache with the new configuration.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo service apache2 restart
+</code></pre>
+</div>
+
+<p>Finally, make sure you have JupyterHub running as indicated above (behold <code class="highlighter-rouge">--port</code> and <code class="highlighter-rouge">--no-ssl</code> option). If everything is running (Apache with the new configuration and JupyterHub on port 8000, no SSL) you should be able to see JupyterHub on <code class="highlighter-rouge">http://jupyterhub.raspifarm</code>.</p>
+
+<p>There can be multiple reasons if it doesn’ work. Here are a few points to consider while troubleshooting:</p>
+
+<ul>
+  <li>Are you connected to the master node?</li>
+  <li>Is the <a href="/howtos/install-dnsmasq">DNS server</a> running? (<code class="highlighter-rouge">sudo service dnsmasq status</code>)</li>
+  <li>Is <a href="/howtos/install-apache">Apache</a> running? (<code class="highlighter-rouge">sudo service apache2 status</code>)</li>
+  <li>Is JupyterHub running? (see above)</li>
+</ul>
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      
+      Tags<br/>
+          
+            <span class="label label-success">setup</span>
+          
+            <span class="label label-success">master</span>
+          
+            <span class="label label-success">howto</span>
+          
+            
+
+      
+          <span class="label label-default">Difficulty: medium</span>
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

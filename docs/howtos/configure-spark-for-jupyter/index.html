@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Configure Spark for Jupyter</title>
+  <meta name="description" content="Add kernel definition for PySpark">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/configure-spark-for-jupyter/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Configure Spark for Jupyter
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p>Add kernel definition for PySpark</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo mkdir -p /usr/local/share/jupyter/kernels/pyspark/
+cat &lt;&lt;EOF | sudo tee /usr/local/share/jupyter/kernels/pyspark/kernel.json
+{
+ "display_name": "PySpark",
+ "language": "python",
+ "argv": [
+  "/usr/bin/python2",
+  "-m",
+  "ipykernel",
+  "-f",
+  "{connection_file}"
+ ],
+ "env": {
+  "SPARK_HOME": "/home/farmer/spark/",
+  "PYTHONPATH": "/home/farmer/spark/python:/home/farmer/spark/python/lib/py4j-0.9-src.zip",
+  "PYTHONSTARTUP": "/home/farmer/spark/python/pyspark/shell.py",
+  "PYSPARK_SUBMIT_ARGS": "--master spark://192.168.17.1:7077 pyspark-shell"
+ }
+}
+EOF
+</code></pre>
+</div>
+
+<p>Edit this file: /usr/local/share/jupyter/kernels/pyspark/kernel.json</p>
+
+<p><strong>Important</strong>: Set SPARK_HOME, PYTHONPATH, PYTHONSTARTUP, PYSPARK_SUBMIT_ARGS according to your configuration!</p>
+
+<h2 id="testing-if-pyspark-starts-correctly">Testing if pyspark starts correctly</h2>
+
+<p><code class="highlighter-rouge">ipython console --kernel pyspark</code></p>
+
+<p>then type <code class="highlighter-rouge">sc</code></p>
+
+<p>which should output something like:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>In [1]: sc
+Out[1]: &lt;pyspark.context.SparkContext at 0x7f2b480f0e90&gt;
+</code></pre>
+</div>
+
+<h2 id="in-jupyter-web-gui">in jupyter web gui</h2>
+
+<p>run this script which uses the SparkContext ‘sc’ to calculate the number pi:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>import random as ran
+import time
+
+start_time = time.time()
+
+def sample(p):
+    x, y = ran.random(), ran.random()
+    return 1 if x*x + y*y &lt; 1 else 0
+
+NUM_SAMPLES = 1*1000*1000
+
+print("Mapping...")
+mappedOutput = sc.parallelize(xrange(0, NUM_SAMPLES)).map(sample)
+
+print("Reducing...")
+count = mappedOutput.reduce(lambda a, b: a + b)
+
+print("Pi is roughly %f" % (4.0 * count / NUM_SAMPLES))
+print("--- %s seconds ---" % (time.time() - start_time))
+</code></pre>
+</div>
+
+<h2 id="sparkcontext-infos">SparkContext Infos</h2>
+
+<p>When a SparkContext is running it creates a webservice under <a href="http://192.168.17.1:4040/jobs/">http://192.168.17.1:4040</a> where infos about the process can be accessed.</p>
+
+<h2 id="the-same-with-jupyter-not-jupyterhub">The same with Jupyter (not JupyterHub)</h2>
+
+<p>Memory issues remain: <strong>Only one Jupyter notebook with the pyspark-kernel can run at a time.</strong></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>jupyter notebook --ip '*'
+</code></pre>
+</div>
+
+<h2 id="disallow-multiple-sparkcontexts">Disallow multiple SparkContexts</h2>
+
+<p>This doesn’t solve the memory issue with multiple kernels being started.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo nano /home/farmer/spark/python/pyspark/shell.py
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>...
+if os.environ.get("SPARK_EXECUTOR_URI"):
+    SparkContext.setSystemProperty("spark.executor.uri", os.environ["SPARK_EXECUTOR_URI"])
+    SparkContext.setSystemProperty("spark.driver.allowMultipleContexts", "false")
+...
+</code></pre>
+</div>
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+            
+
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Hardware</title>
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/hardware.html">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #6aae5f
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>What do I need?</h2>
+                  
+                    <hr class="small">
+                    
+                      <i aria-hidden="true" class="fa fa-plug fa-5x"></i>
+                    
+                    <h1>
+                      
+                        Hardware
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+			<p>Our cluster consists of 9 Raspberry Pis, 8 of which are slave nodes and 1 unit is the master node.</p>
+
+<h2 id="order-list">Order list</h2>
+
+<p>Here’s a short version of our order list.</p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th style="text-align: right">Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Raspberry Pi 3</td>
+      <td style="text-align: right">9</td>
+    </tr>
+    <tr>
+      <td>Kingston microSDHC Card 16GB</td>
+      <td style="text-align: right">9</td>
+    </tr>
+    <tr>
+      <td>Edimax ES-3308P V8 (Switch)</td>
+      <td style="text-align: right">2</td>
+    </tr>
+    <tr>
+      <td>Anker 5-Port Desktop USB Charger</td>
+      <td style="text-align: right">2</td>
+    </tr>
+    <tr>
+      <td>USB Cables (short ones)</td>
+      <td style="text-align: right">9</td>
+    </tr>
+    <tr>
+      <td>Ethernet Cables (short ones)</td>
+      <td style="text-align: right">10</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="power">Power</h2>
+
+<p>It all starts with 9 Raspberry Pi 3, that all need to be powered.<br />
+The power comes from the 9 USB cables, that are connected to Raspberry Pi on one side, and to the Anker USB charger on the other side.</p>
+
+<h2 id="network">Network</h2>
+
+<p>We have 10 ethernet cables. Each Raspberry Pi needs to be connected to one ethernet cable.<br />
+We used the remaining cable to connect the two switches to build a “bridge” between the two devices.<br />
+Otherwise not all Raspberry Pis could communicate in the cluster.<br />
+Behold:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>            _________          _________
+[RPI]======|         |        |         |======[RPI]
+[RPI]======|         |        |         |======[RPI]
+[RPI]======| Switch  |========| Switch  |======[RPI]
+[RPI]======|         |        |         |======[RPI]
+[RPI]======|         |        |         |
+            ‾‾‾‾‾‾‾‾‾          ‾‾‾‾‾‾‾‾‾
+</code></pre>
+</div>
+<p>As you already figured out, <code class="highlighter-rouge">======</code> are ethernet cables. Yay, ASCII!</p>
+
+<h2 id="assembling--design">Assembling / Design</h2>
+
+<p>May be for your disappointment, we are <em>not</em> going to describe here  we designed the and assembled our cluster. We suggest you come up with your own layout, creativity has no limits. <i class="fa fa-smile-o"></i></p>
+
+<h2 id="result">Result</h2>
+
+<p>Here’s how one half of our cluster looks like in the end:</p>
+
+<p><img src="/assets/images/raspifarm-cluster.jpg" alt="Picture of the assembled cluster" /></p>
+
+
+		</div>
+	</div>
+</div>
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

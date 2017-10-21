@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Install DNSmasq</title>
+  <meta name="description" content=" Available in a Ansible Playbook raspifarm-master-essentials.yml">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/install-dnsmasq/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Install DNSmasq
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p><img src="/assets/images/ansible-mini.svg" width="20px" />
+ Available in a <a href="/howtos/use-ansible-playbooks">Ansible Playbook</a> <code class="highlighter-rouge">raspifarm-master-essentials.yml</code></p>
+
+<hr />
+
+<p>A cluster is a network of computers. Our master node has the responsibility over the IP addresses that are assigned to the participating hosts within the network. Therefore, we’re going to need an DHCP server running on the master node.</p>
+
+<p>Also, we wanted to have our own “intranet” with our own local-only domain. That’s why we’re going  to make use of a DNS server that routes HTTP requests to an webserver (which also runs on the same host).</p>
+
+<p>In this tutorial, we show how to install <code class="highlighter-rouge">dnsmasq</code> that provides the functionality of a DHCP server and a DNS server.</p>
+
+<h2 id="installation">Installation</h2>
+
+<p>We’d chosen DNSmasq as DNS server that runs on our master node. Here’s how to install it.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo apt-get install dnsmasq
+</code></pre>
+</div>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>Next, we have to configure the DHCP and DNS.</p>
+
+<h3 id="dhcp">DHCP</h3>
+
+<p>DHCP is going to assign IP addresses to hosts that join the network without a static IP address. The IP addresses will be in the range of 50 - 99 in our subnet. The corresponding directives in the configuration file are:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">interface=</code></li>
+  <li><code class="highlighter-rouge">dhcp-range=</code></li>
+  <li><code class="highlighter-rouge">dhcp-option=</code></li>
+  <li><code class="highlighter-rouge">dhcp-authoritative</code></li>
+</ul>
+
+<h3 id="dns">DNS</h3>
+
+<p>We also want to have our own local-only domain named “.raspifarm”. This, among others, can be achieved with a DNS server. The directives for the DNS servers are:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">domain-needed</code></li>
+  <li><code class="highlighter-rouge">bogus-priv</code></li>
+  <li><code class="highlighter-rouge">local=</code></li>
+  <li><code class="highlighter-rouge">address=</code></li>
+  <li><code class="highlighter-rouge">expand-hosts</code></li>
+  <li><code class="highlighter-rouge">domain=</code></li>
+</ul>
+
+<h3 id="summary-of-dnsmasq-configuration-file">Summary of dnsmasq configuration file</h3>
+
+<p>The configuration file for dnsmasq is here: <code class="highlighter-rouge">/etc/dnsmasq.conf</code>. 
+We ended up with this configuration:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>domain-needed
+bogus-priv
+<span class="nb">local</span><span class="o">=</span>/raspifarm/
+<span class="nv">address</span><span class="o">=</span>/raspifarm/192.168.17.1
+<span class="nv">interface</span><span class="o">=</span>eth0
+expand-hosts
+<span class="nv">domain</span><span class="o">=</span>raspifarm
+dhcp-range<span class="o">=</span>192.168.17.50,192.168.17.99,12h
+dhcp-option<span class="o">=</span>option:router,192.168.17.1
+dhcp-authoritative
+</code></pre>
+</div>
+
+<h2 id="restart-the-server">Restart the server</h2>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo service dnsmasq restart
+</code></pre>
+</div>
+
+<h2 id="next-step">Next step</h2>
+
+<p>In order to interpret the requests to <code class="highlighter-rouge">http://[anything].raspifarm</code>, we have <a href="/howtos/install-apache">installed an Apache server</a> that handles the requests and routes them to corresponding applications.</p>
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      
+      Tags<br/>
+          
+            <span class="label label-success">setup</span>
+          
+            <span class="label label-success">master</span>
+          
+            <span class="label label-success">howto</span>
+          
+            
+
+      
+          <span class="label label-default">Difficulty: medium</span>
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Install the Raspi Cam</title>
+  <meta name="description" content="Our idea for the machine learning project was to take a picture of a handwritten digit from the Raspberry Pi camera and let a machine learning guess the digi...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/install-the-raspi-cam/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Install the Raspi Cam
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p>Our idea for the machine learning project was to take a picture of a handwritten digit from the Raspberry Pi camera and let a machine learning guess the digit.
+Therefore we need 2 things. A camera and software to take and process pictures.</p>
+
+<h2 id="camera">Camera</h2>
+
+<p>We used the Raspberry Pi “NoIR” camera board, that we <a href="https://www.raspberrypi.org/documentation/usage/camera/README.md">installed according to the instructions</a> from the official Raspberry Pi documentation page. In a nutshell, you have to connect the camera correctly, and then…</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo raspi-config   
+</code></pre>
+</div>
+
+<p>… select “Enable camera”, then hit Enter.</p>
+
+<h3 id="allow-farmer-user-to-use-the-camera">Allow farmer user to use the camera</h3>
+
+<p>Because we’re operating with the <a href="/howtos/setup-admin-group-and-users">farmer</a> user, we’ll have to add <code class="highlighter-rouge">farmer</code> to a group named <code class="highlighter-rouge">video</code>.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo usermod -a -G video farmer
+</code></pre>
+</div>
+
+<p>Then restart the Pi.</p>
+
+<h3 id="test-the-camera">Test the camera</h3>
+
+<p>With the camera connected, enabled and the right privileges you should be able to run this:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>raspistill -o ~/cam.jpg
+</code></pre>
+</div>
+
+<p>(it can take several seconds)</p>
+
+<p>After you should see an image (or at least an image file) in your home directory named “cam.jpg”.</p>
+
+<h2 id="software">Software</h2>
+
+<p>For the software, we’re going to need two things:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">python-picamera</code>: A library that enables us to control the camera board.</li>
+  <li><code class="highlighter-rouge">scikit-image</code>: A library to process the images we record.</li>
+</ol>
+
+<h3 id="python-picamera-library">Python-Picamera library</h3>
+
+<p>In order to take pictures we’re going to use the “python-picamera” package.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo apt-get update
+sudo apt-get install python-picamera
+</code></pre>
+</div>
+
+<h3 id="install-the-scikit-image-library">Install the scikit-image library</h3>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo apt-get update
+sudo apt-get install python-matplotlib python-numpy python-pil python-scipy
+sudo apt-get install build-essential cython
+pip3 install -U scikit-image
+</code></pre>
+</div>
+
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      
+      Tags<br/>
+          
+            <span class="label label-success">master</span>
+          
+            <span class="label label-success">howto</span>
+          
+            <span class="label label-success">machinelearning</span>
+          
+            
+
+      
+          <span class="label label-default">Difficulty: easy</span>
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

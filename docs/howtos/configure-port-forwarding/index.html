@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Do portforwarding</title>
+  <meta name="description" content="The master node in our little network has a lot of tasks. One of them is to accept all requests that were performed over the network. Even the ones that were...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/configure-port-forwarding/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Do portforwarding
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p>The master node in our little network has a lot of tasks. One of them is to accept all requests that were performed over the network. Even the ones that were not meant for him (assuming the node is a man). These requests have to be forwarded, using so called <em>iptables</em> or also “Firewall” settings.</p>
+
+<h2 id="settings">Settings</h2>
+
+<p>Remember, we are connected to the master node via cable (<code class="highlighter-rouge">eth0</code>) and the master node itself accesses the internet via wireless (<code class="highlighter-rouge">wlan0</code>).<br />
+Let’s assume that we open <code class="highlighter-rouge">http://google.com</code> on “our” laptop.
+What the 3 magic lines below do, is to make sure that “our” HTTP request, which arrives at <code class="highlighter-rouge">eth0</code>, is forwarded to <code class="highlighter-rouge">wlan0</code>. Also, it forwards the responses (in this example from Google) back to us.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
+sudo iptables -A FORWARD -i wlan0 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i eth0 -o wlan0 -j ACCEPT
+</code></pre>
+</div>
+
+<h2 id="enable-routing">Enable routing</h2>
+
+<p>Now, we want to make the settings effective right away</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo sh -c "echo 1 &gt; /proc/sys/net/ipv4/ip_forward"
+</code></pre>
+</div>
+
+<p>In order, that the settings are still effective after a system restart, we have to modify <code class="highlighter-rouge">/etc/sysctl.conf</code>. Make sure that following line is uncommented</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>net.ipv4.ip_forward=1
+</code></pre>
+</div>
+
+<h2 id="persist-ip-table-settings">Persist IP table settings</h2>
+
+<p>Also the IP table settings have to be persisted, otherwise it’ll be reset after a system restart.
+Luckily there’s a package that does that</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo apt-get install iptables-persistent
+</code></pre>
+</div>
+
+<p>It will ask you to permanently save the current IP table settings for IPv4 and IPv6. Choose Yes for both.
+The settings are stored in this directory:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>/etc/iptables/
+</code></pre>
+</div>
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      
+      Tags<br/>
+          
+            <span class="label label-success">howto</span>
+          
+            <span class="label label-success">setup</span>
+          
+            <span class="label label-success">master</span>
+          
+            
+
+      
+          <span class="label label-default">Difficulty: medium</span>
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Install MPI on the cluster</title>
+  <meta name="description" content="How to install MPI on the cluster">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/installing-MPI-on-the-cluster/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Install MPI on the cluster
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p>How to install MPI on the cluster</p>
+
+<p>Run <code class="highlighter-rouge">sudo apt-get install -y python-mpi4py</code> on all nodes.</p>
+
+<p>Test the installation: <code class="highlighter-rouge">mpiexec -n 5 python -m mpi4py helloworld</code></p>
+
+<p>Create <strong>machinefile</strong> in <code class="highlighter-rouge">~/</code> with the ip-addresses of the nodes:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>farmer@192.168.17.11
+farmer@192.168.17.12
+farmer@192.168.17.13
+farmer@192.168.17.14
+farmer@192.168.17.15
+farmer@192.168.17.16
+farmer@192.168.17.17
+farmer@192.168.17.18
+</code></pre>
+</div>
+
+<p>Run:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>mpiexec -n 4 -machinefile ~/machinefile python -m mpi4py helloworld
+</code></pre>
+</div>
+
+<p>Output should be:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Hello, World! I am process 0 of 4 on raspifarm-slave-11.
+Hello, World! I am process 1 of 4 on raspifarm-slave-12.
+Hello, World! I am process 2 of 4 on raspifarm-slave-13.
+Hello, World! I am process 3 of 4 on raspifarm-slave-14.
+</code></pre>
+</div>
+
+<h1 id="running-a-jupyter-notebook-on-the-cluster">Running a Jupyter-notebook on the cluster</h1>
+
+<p>Tutorial: https://ipython.org/ipython-doc/3/parallel/parallel_mpi.html</p>
+
+<ol>
+  <li>Convert .ipynb to .py</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>jupyter nbconvert mpi-cluster-script.ipynb --to python
+</code></pre>
+</div>
+
+<ol>
+  <li>Install IPython on all the nodes</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo apt-get -y install python3-pip npm nodejs-legacy
+</code></pre>
+</div>
+
+<ol>
+  <li>Start the controller and engines
+```
+ipcluster start -n 4 –engines=MPIEngineSetLauncher
+``</li>
+  <li>Run the python-script</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mpiexec -n 4 -machinefile ~/machinefile python mpi-world.py
+</code></pre>
+</div>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># mpi-world.py</span>
+<span class="kn">from</span> <span class="nn">mpi4py</span> <span class="kn">import</span> <span class="n">MPI</span>
+
+<span class="n">comm</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+
+<span class="n">rank</span><span class="o">=</span><span class="n">comm</span><span class="o">.</span><span class="n">rank</span>
+<span class="n">size</span><span class="o">=</span><span class="n">comm</span><span class="o">.</span><span class="n">size</span>
+
+<span class="n">i</span><span class="o">=</span><span class="mi">1</span>
+<span class="k">for</span> <span class="n">j</span>  <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">400</span><span class="p">):</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">j</span><span class="o">*</span><span class="n">j</span>
+    <span class="n">comm</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">dest</span><span class="o">=</span><span class="p">(</span><span class="n">rank</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">data1</span><span class="o">=</span><span class="n">comm</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="p">(</span><span class="n">rank</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">size</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">data1</span>
+    <span class="k">print</span>
+
+</code></pre>
+</div>
+
+<h1 id="running-your-own-python-scripts-on-the-cluster">Running your own python scripts on the cluster</h1>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mpiexec -n 4 -machinefile /path/to/machinefile python example_script.py
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># example_script.py
+from mpi4py import MPI
+rank = MPI.COMM_WORLD.Get_rank()
+
+a = 6.0
+b = 3.0
+if rank == 0:
+    print a + b
+if rank == 1:
+    print a * b
+if rank == 2:
+    print max(a,b)
+if rank == 3:
+    print min(a,b)
+</code></pre>
+</div>
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+            
+
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Install Apache Spark</title>
+  <meta name="description" content=" Available as Ansible Playbook apache-spark-master.yml">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/install-apache-spark/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Install Apache Spark
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p><img src="/assets/images/ansible-mini.svg" width="20px" />
+ Available as <a href="/howtos/use-ansible-playbooks">Ansible Playbook</a> <code class="highlighter-rouge">apache-spark-master.yml</code></p>
+
+<hr />
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li>Raspbian needs to be installed on the master and all the slave-nodes</li>
+  <li>Master and slave nodes need static ip addresses</li>
+  <li>A computer with an internet connection</li>
+  <li>Installed ansible on the master-node</li>
+</ul>
+
+<h2 id="download-apache-spark">Download Apache Spark</h2>
+
+<p>Go to this website: <a href="http://spark.apache.org/downloads.html">http://spark.apache.org/downloads.html</a></p>
+
+<p>Choose the latest stable release of Apache Spark. At the time of writing this was version 1.6.2.</p>
+
+<p>Choose as package type “Pre-built for Hadoop 2.x”.</p>
+
+<p>This will download a file named something like “spark-1.6.2-bin-hadoop2.6.tgz”.</p>
+
+<p>Use scp to copy this file to the master node:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>scp spark-1.6.2-bin-hadoop2.6.tgz farmer@192.168.17.1
+</code></pre>
+</div>
+
+<p>Extract the contents of the package with:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>tar xvfz spark-1.6.2-bin-hadoop2.6.tgz
+</code></pre>
+</div>
+
+<p>This will create a new directory named “spark-1.6.2-bin-hadoop2.6”</p>
+
+<p>Rename this directory to “spark”:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>mv spark-1.6.1-bin-hadoop2.6 spark
+</code></pre>
+</div>
+
+<p>While still on the master-node you need to edit two files:</p>
+
+<p>In <strong>~/spark/conf/slaves</strong> we define which IPs belong to the spark-cluster. This file only needs to exist on the master but it doesn’t hurt if it is also on the slave-nodes.</p>
+
+<p>Content of <strong>~/spark/conf/slaves</strong>:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># A Spark Worker will be started on each of the machines listed below.</span>
+farmer@192.168.17.11
+farmer@192.168.17.12
+farmer@192.168.17.13
+farmer@192.168.17.14
+farmer@192.168.17.15
+farmer@192.168.17.16
+farmer@192.168.17.17
+farmer@192.168.17.18
+</code></pre>
+</div>
+
+<p>In <strong>~/spark/conf/spark-env.sh</strong> we define the properties of our cluster (like the amount of RAM available to each node).</p>
+
+<p>Content of <strong>~/spark/conf/spark-env.sh</strong> on the <strong>master-node</strong>:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
+
+<span class="c"># SPARK_WORKER_MEMORY, to set how much total memory workers have to give executors (e.g. 1000m, 2g)</span>
+<span class="c"># Total amount of memory that can be used on one machine</span>
+<span class="nv">SPARK_WORKER_MEMORY</span><span class="o">=</span>480m
+<span class="c"># SPARK_DAEMON_MEMORY, to allocate to the master, worker and history server themselves (default: 1g)</span>
+<span class="nv">SPARK_DAEMON_MEMORY</span><span class="o">=</span>128m
+<span class="nv">SPARK_MASTER_IP</span><span class="o">=</span>192.168.17.1
+
+<span class="c"># Although these are settings for running the cluster with the YARN resource manager</span>
+<span class="c"># these need to be set or otherwise the master throws an out-of-memory exception</span>
+<span class="nv">SPARK_EXECUTOR_MEMORY</span><span class="o">=</span>480m
+<span class="nv">SPARK_DRIVER_MEMORY</span><span class="o">=</span>480m
+</code></pre>
+</div>
+
+<p>Copy the spark-directory to each node using ansible (this may take a while because the copy-command is really slow):</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>ansible raspifarm-slaves -m copy -a <span class="s2">"src=/home/farmer/spark dest=/home/farmer/"</span> -f 8
+</code></pre>
+</div>
+
+<p><strong>IMPORTENT</strong>: The spark-directory needs to be in the same directory on the master and the slave-nodes!</p>
+
+<h2 id="make-all-files-inside-the-spark-folder-executable">Make all files inside the spark-folder executable.</h2>
+
+<p>On the master-node:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>chmod -R +x spark
+</code></pre>
+</div>
+
+<p>On the slave-nodes (automated with ansible):</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>ansible raspifarm-slaves -a <span class="s2">"chmod -R +x spark"</span> -f 8
+</code></pre>
+</div>
+
+<h2 id="adjust-log-level-for-spark">Adjust log-level for spark</h2>
+
+<p><strong>On the master-node:</strong></p>
+
+<p>Open <code class="highlighter-rouge">~/spark/conf/log4j.properties</code> with your favourite text-editor and change the following line:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>log4j.rootCategory<span class="o">=</span>INFO, console
+</code></pre>
+</div>
+
+<p>to:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>log4j.rootCategory<span class="o">=</span>WARN, console
+</code></pre>
+</div>
+
+<h2 id="starting-the-spark-cluster-manually">Starting the spark-cluster manually</h2>
+
+<p>Before starting the spark-cluster we need to set some PATHs:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/home/farmer/spark/bin/
+
+<span class="nb">export </span><span class="nv">SPARK_HOME</span><span class="o">=</span>/home/farmer/spark/
+<span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$PYTHONPATH</span>:<span class="nv">$SPARK_HOME</span>/python/:<span class="nv">$SPARK_HOME</span>/python/lib/py4j-0.9-src.zip
+</code></pre>
+</div>
+
+<p>Start the cluster from the master-node:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>~/spark/sbin/start-all.sh
+</code></pre>
+</div>
+
+<h2 id="using-the-cluster-via-shell">Using the cluster via shell</h2>
+
+<p>Python-shell:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>~/spark/bin/pyspark --master spark://192.168.17.1:7077
+</code></pre>
+</div>
+
+<p>Scala-shell:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>~/spark/bin/spark-shell --master spark://192.168.17.1:7077
+</code></pre>
+</div>
+
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      
+      Tags<br/>
+          
+            <span class="label label-success">howto</span>
+          
+            <span class="label label-success">machinelearning</span>
+          
+            <span class="label label-success">master</span>
+          
+            <span class="label label-success">slave</span>
+          
+            <span class="label label-success">spark</span>
+          
+            <span class="label label-success">apache</span>
+          
+            <span class="label label-success">cluster</span>
+          
+            <span class="label label-success">installation</span>
+          
+            
+
+      
+          <span class="label label-default">Difficulty: advanced</span>
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Install Apache</title>
+  <meta name="description" content=" Available in a Ansible Playbook raspifarm-master-essentials.yml">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/install-apache/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Install Apache
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p><img src="/assets/images/ansible-mini.svg" width="20px" />
+ Available in a <a href="/howtos/use-ansible-playbooks">Ansible Playbook</a> <code class="highlighter-rouge">raspifarm-master-essentials.yml</code></p>
+
+<hr />
+
+<p>We want to have our own little intranet with a custom, local-only domain named <em>.raspifarm</em>. So for example, if a user who is connected to the cluster’s network enters “http://home.raspifarm” in a browser, the user shall see a tiny little webpage.<br />
+Thus, we’re going to install an Apache webserver on the master node.<br />
+For the home page demo, you will have to have a DNS server running, which is configured as described <a href="/howtos/install-dnsmasq">here</a></p>
+
+<h2 id="install-apache-webserver">Install apache webserver</h2>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo apt-get install apache2
+</code></pre>
+</div>
+
+<p>That’s already it… installation-wise.</p>
+
+<h2 id="prepare-a-directory-where-a-home-page-is-stored">Prepare a directory where a “home” page is stored</h2>
+
+<p>The web site or application for “http://home.raspifarm” has to be somewhere in a folder, usually one puts them within here <code class="highlighter-rouge">/var/www/</code>. Let’s do this, well name the web site <code class="highlighter-rouge">home</code>:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo mkdir -p /var/www/home
+sudo chown -R farmer:admin /var/www/home/ <span class="c"># assuming you have the farmer user</span>
+touch /var/www/home/index.html
+</code></pre>
+</div>
+
+<p>Then paste a tiny bit of HTML code into <code class="highlighter-rouge">/var/www/home/index.html</code></p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;!doctype html&gt;</span>
+
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Welcome to the raspifarm Network<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+
+  <span class="nt">&lt;body&gt;</span>
+    This is the 'home' page
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre>
+</div>
+
+<p>So, our web page is almost ready. Now we have to tell Apache where to find it.</p>
+
+<h2 id="configure-a-default-page-for-http-requests-in-apache">Configure a default page for HTTP requests in apache</h2>
+
+<p>In Apache you can configure multiple websites, they call this “Virtual Hosts”. There’s also a default “Virtual Host”, which will use for our “home” page.</p>
+
+<p>The configuration files for sites are stored here <code class="highlighter-rouge">/etc/apache2/sites-available/</code></p>
+
+<p>Modify the preconfigured default configuration <code class="highlighter-rouge">/etc/apache2/sites-available/000-default.conf</code>, like so:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;VirtualHost</span> <span class="err">*:80</span><span class="nt">&gt;</span>
+	DocumentRoot /var/www/home
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+<span class="nt">&lt;/VirtualHost&gt;</span>
+</code></pre>
+</div>
+<p>Note that this is a super-basic configuration, there’s much more you can do with Apache, we won’t go into detail here though.</p>
+
+<p>However, it’s time to restart Apache:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>sudo service apache2 restart
+</code></pre>
+</div>
+
+<p>Then, make sure you’re connected to the cluster’s network (you should have an IP in <code class="highlighter-rouge">192.168.17.x</code>) and check if Apache and the DNS do their work correctly by opening <code class="highlighter-rouge">http://home.raspifarm</code>.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>curl http://home.raspifarm
+&lt;!doctype html&gt;
+
+&lt;html <span class="nv">lang</span><span class="o">=</span><span class="s2">"en"</span>&gt;
+  &lt;head&gt;
+    &lt;meta <span class="nv">charset</span><span class="o">=</span><span class="s2">"utf-8"</span>&gt;
+    &lt;title&gt;Welcome to the raspifarm Network&lt;/title&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    This is the <span class="s1">'home'</span> page
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+</div>
+
+<p>One last thing: Since the “home” page is our default page, so apache returns it if the URL ([something].raspifarm) does not match any other configured web pages. Go and try <code class="highlighter-rouge">curl http://go-and-try-this.url.raspifarm</code>. Nice, right?</p>
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      
+      Tags<br/>
+          
+            <span class="label label-success">setup</span>
+          
+            <span class="label label-success">master</span>
+          
+            <span class="label label-success">howto</span>
+          
+            
+
+      
+          <span class="label label-default">Difficulty: medium</span>
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>

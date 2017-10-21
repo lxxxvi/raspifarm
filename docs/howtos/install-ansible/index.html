@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Install Ansible</title>
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://raspi.farm/howtos/install-ansible/">
+  <link rel="alternate" type="application/rss+xml" title="raspi.farm" href="http://raspi.farm/feed.xml">
+  <script src="https://use.fontawesome.com/88b4e5e133.js"></script>
+</head>
+
+
+  <body role="document">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">raspi.farm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                
+				
+                <li>
+                    <a href="/about.html">About</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/hardware.html">Hardware</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/machinelearning.html">Machine Learning</a>
+                </li>
+				
+                
+				
+                <li>
+                    <a href="/setup.html">Setup</a>
+                </li>
+				
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <header class="intro-header" style="background-color:
+
+  #CE972E
+;">
+<!--
+style="background-image: url('/assets/images/raspi3.jpg')"
+-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                  
+                    <h2>How to...</h2>
+                  
+                    <hr class="small">
+                    
+                    <h1>
+                      
+                        Install Ansible
+                      
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <div class="container">
+
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <p><img src="/assets/images/ansible-logo.png" alt="Ansible logo" /></p>
+
+<p><a href="https://ansible.com/">Ansible</a> is a configuration management tool, that enables you to control your hosts remotely and easily deploy configuration over all nodes.</p>
+
+<h2 id="installation">Installation</h2>
+
+<p>You can install Ansible through <code class="highlighter-rouge">apt-get</code>, but on the Raspberry Pi you’ll only get version 1.7. At the time of writing, Ansible 2.2 is the latest version. However, the “manual” installation is pretty simple too…</p>
+
+<p>For other ways to install Ansible on your master host, please consider reading the official documentation at
+<a href="http://docs.ansible.com/ansible/intro_installation.html">http://docs.ansible.com/ansible/intro_installation.html</a>.</p>
+
+<p>Since, we wanted to use the latest version of Ansible, this is the way we’ve chosen to go to install it:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="nb">cd</span> ~
+git clone git://github.com/ansible/ansible.git --recursive
+<span class="nb">source</span> ~/ansible/hacking/env-setup
+</code></pre>
+</div>
+
+<p>Before we call it done, we want to include the <code class="highlighter-rouge">env-setup</code> thing in our <code class="highlighter-rouge">~/.profile</code> file, so that we don’t loose the commands when we log out and log in again.
+Put this line into your ‘~/.profile’ (or equivalent) file:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="nb">source</span> ~/ansible/hacking/env-setup -q   <span class="c"># -q makes it silent</span>
+</code></pre>
+</div>
+
+<h3 id="updating-ansible">Updating Ansible</h3>
+
+<p>In the official documentation it’s mentioned, that if you want to update Ansible you should not forget to update the submodules too, like so:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>git pull --rebase
+git submodule update --init --recursive
+</code></pre>
+</div>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>Next, we are going to let Ansible know which hosts we want to manage. Ansible calls this <em>inventory</em> and is located by default here: <code class="highlighter-rouge">/etc/ansible/hosts</code>. You can also create your own <em>inventory</em> file and put it anywhere you like.</p>
+
+<p>However, in both cases you will have to put something like the following into the inventory (we did it in the default file):</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="o">[</span>raspifarm-slaves]
+192.168.17.[11:18]
+</code></pre>
+</div>
+
+<p>With this configuration, Ansible knows that there’s a “group of hosts” named “raspifarm-slaves” and they should be reachable in the range 11-18 within the subnet 192.168.17.xx .</p>
+
+<p>That was pretty simple, right?</p>
+
+<h2 id="test-it">Test it!</h2>
+
+<p>In order to test Ansible, run this command:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>ansible raspifarm-slaves -m ping
+</code></pre>
+</div>
+
+<p>We just told Ansible to ping all hosts in the “raspifarm-slaves” group. If you have your group defined in a seperate inventory file you can let Ansible know where it is:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>ansible raspifarm-slaves -i &lt;path-to-your-inventory-file&gt; -m ping
+</code></pre>
+</div>
+
+<p>Eventually, we received this answer from the command:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>192.168.17.15 | SUCCESS <span class="o">=</span>&gt; <span class="o">{</span>
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"ping"</span>: <span class="s2">"pong"</span>
+<span class="o">}</span>
+192.168.17.13 | UNREACHABLE! <span class="o">=</span>&gt; <span class="o">{</span>
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"msg"</span>: <span class="s2">"Failed to connect to the host via ssh."</span>,
+    <span class="s2">"unreachable"</span>: <span class="nb">true</span>
+<span class="o">}</span>
+192.168.17.14 | UNREACHABLE! <span class="o">=</span>&gt; <span class="o">{</span>
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"msg"</span>: <span class="s2">"Failed to connect to the host via ssh."</span>,
+    <span class="s2">"unreachable"</span>: <span class="nb">true</span>
+<span class="o">}</span>
+192.168.17.11 | UNREACHABLE! <span class="o">=</span>&gt; <span class="o">{</span>
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"msg"</span>: <span class="s2">"Failed to connect to the host via ssh."</span>,
+    <span class="s2">"unreachable"</span>: <span class="nb">true</span>
+<span class="o">}</span>
+192.168.17.12 | UNREACHABLE! <span class="o">=</span>&gt; <span class="o">{</span>
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"msg"</span>: <span class="s2">"Failed to connect to the host via ssh."</span>,
+    <span class="s2">"unreachable"</span>: <span class="nb">true</span>
+<span class="o">}</span>
+192.168.17.17 | SUCCESS <span class="o">=</span>&gt; <span class="o">{</span>
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"ping"</span>: <span class="s2">"pong"</span>
+<span class="o">}</span>
+192.168.17.16 | SUCCESS <span class="o">=</span>&gt; <span class="o">{</span>
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"ping"</span>: <span class="s2">"pong"</span>
+<span class="o">}</span>
+192.168.17.18 | SUCCESS <span class="o">=</span>&gt; <span class="o">{</span>
+    <span class="s2">"changed"</span>: <span class="nb">false</span>,
+    <span class="s2">"ping"</span>: <span class="s2">"pong"</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Note, that we have disconnected nodes 11 to 14 to demonstrate different results.</p>
+
+<h2 id="next-steps">Next steps</h2>
+
+<p>So, this is just the beginning. You can do a lot more with Ansible. Learn how to automate stuff by writing so called <a href="/howtos/use-ansible-playbooks">Playbooks</a> …</p>
+
+    </div>
+  </div>
+
+  <div class="row tags">
+
+    <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1">
+      
+      Tags<br/>
+          
+            <span class="label label-success">setup</span>
+          
+            <span class="label label-success">master</span>
+          
+            <span class="label label-success">howto</span>
+          
+            
+
+      
+          <span class="label label-default">Difficulty: medium</span>
+            
+    </div>
+
+  </div>  
+
+  
+</div>
+
+
+
+    <hr />
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        2016 | University of Applied Sciences and Arts Northwestern Switzerland
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+<script src="//js/clean-blog.min.js"></script>
+
+  </body>
+
+</html>
